@@ -983,6 +983,19 @@
         }).join('');
     }
 
+    /**
+     * Reads the official drawn numbers from loaded sheet data (column F, winNumbers).
+     * Used only for #drawnNumbersDisplay in Phase 3 so the header matches the spreadsheet.
+     * @returns {number[]} Copy of the first non-empty winNumbers row, or [] if none.
+     */
+    function getSheetDrawnNumbersForDisplay() {
+        for (var i = 0; i < winnersData.length; i++) {
+            var w = winnersData[i];
+            if (w.winNumbers && w.winNumbers.length) return w.winNumbers.slice();
+        }
+        return [];
+    }
+
     function randInt(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
     function randItem(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
     function pad2(n) { return String(n).padStart(2, '0'); }
@@ -1219,7 +1232,11 @@
         p3.classList.add('phase-enter');
 
         document.getElementById('resultConcurso').textContent = 'CONCURSO #' + concursoNum;
-        document.getElementById('drawnNumbersDisplay').innerHTML = renderBallsHTML(drawnNumbers, null);
+        var sheetDrawnForHeader = getSheetDrawnNumbersForDisplay();
+        document.getElementById('drawnNumbersDisplay').innerHTML = renderBallsHTML(
+            sheetDrawnForHeader.length ? sheetDrawnForHeader : drawnNumbers,
+            null
+        );
 
         var container = document.getElementById('winnersContainer');
         container.innerHTML = '';
