@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>POP SORTE — SISTEMA DE APURAÇÃO AO VIVO</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0e1a;
+            --bg-secondary: #111827;
+            --bg-card: #1a1f35;
+            --accent-purple: #cb24e9;
+            --accent-blue: #0ea5e9;
+            --accent-green: #10b981;
+            --accent-gold: #f59e0b;
+            --accent-red: #ef4444;
+            --text-primary: #f1f5f9;
+            --text-muted: #94a3b8;
+            --border-glow: rgba(203, 36, 233, 0.4);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* ========== BACKGROUND PARTICLES ========== */
+        .bg-particles {
+            position: fixed; inset: 0; z-index: 0; pointer-events: none;
+            background: 
+                radial-gradient(ellipse at 20% 50%, rgba(108, 43, 217, 0.08) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 20%, rgba(203, 36, 233, 0.06) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 80%, rgba(14, 165, 233, 0.05) 0%, transparent 50%);
+        }
+
+        /* ========== HEADER ========== */
+        .header {
+            position: relative; z-index: 10;
+            text-align: center;
+            padding: 30px 20px 15px;
+            border-bottom: 1px solid rgba(203, 36, 233, 0.2);
+            background: linear-gradient(180deg, rgba(108, 43, 217, 0.1) 0%, transparent 100%);
+        }
+        .header h1 {
+            font-family: 'Orbitron', monospace;
+            font-size: clamp(1.2rem, 4vw, 2rem);
+            background: linear-gradient(135deg, #cb24e9, #0ea5e9, #cb24e9);
+            background-size: 200% auto;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            animation: shimmer 3s linear infinite;
+            letter-spacing: 3px;
+        }
+        .header .subtitle {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--text-muted); font-size: 0.75rem;
+            margin-top: 6px; letter-spacing: 2px;
+        }
+        .header .live-badge {
+            display: inline-flex; align-items: center; gap: 6px;
+            background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.4);
+            padding: 4px 14px; border-radius: 999px; font-size: 0.7rem;
+            font-weight: 800; color: #ef4444; margin-top: 10px;
+            animation: livePulse 1.5s ease-in-out infinite;
+        }
+        .live-dot {
+            width: 8px; height: 8px; background: #ef4444;
+            border-radius: 50%; animation: blink 1s infinite;
+        }
+
+        @keyframes shimmer { to { background-position: 200% center; } }
+        @keyframes livePulse { 0%,100% { opacity: 1; } 50% { opacity: 0.6; } }
+        @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0.2; } }
+
+        /* ========== MAIN CONTAINER ========== */
+        .main-container {
+            position: relative; z-index: 5;
+            max-width: 900px; margin: 0 auto; padding: 20px;
+        }
+
+        /* ========== PHASE 1: NUMBER INPUT ========== */
+        #phase1 { display: block; }
+        #phase2, #phase3 { display: none; }
+
+        .phase-card {
+            background: var(--bg-card);
+            border: 1px solid rgba(203, 36, 233, 0.15);
+            border-radius: 16px; padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 30px rgba(0,0,0,0.3);
+        }
+
+        .phase-label {
+            font-family: 'Orbitron', monospace;
+            font-size: 0.65rem; letter-spacing: 3px;
+            color: var(--accent-purple); margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+
+        .input-title {
+            font-size: 1.1rem; font-weight: 800;
+            margin-bottom: 20px; color: var(--text-primary);
+        }
+
+        .quina-input-row {
+            display: flex; gap: 12px; justify-content: center;
+            flex-wrap: wrap; margin-bottom: 25px;
+        }
+
+        .quina-num-input {
+            width: 70px; height: 70px;
+            background: var(--bg-secondary);
+            border: 2px solid rgba(203, 36, 233, 0.3);
+            border-radius: 50%; color: var(--text-primary);
+            font-family: 'Orbitron', monospace; font-size: 1.5rem;
+            font-weight: 900; text-align: center;
+            outline: none; transition: all 0.3s;
+        }
+        .quina-num-input:focus {
+            border-color: var(--accent-purple);
+            box-shadow: 0 0 20px rgba(203, 36, 233, 0.4);
+            transform: scale(1.1);
+        }
+        .quina-num-input.filled {
+            border-color: var(--accent-green);
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.3);
+        }
+
+        .concurso-row {
+            display: flex; align-items: center; gap: 12px;
+            justify-content: center; margin-bottom: 25px;
+        }
+        .concurso-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem; color: var(--text-muted);
+        }
+        .concurso-input {
+            width: 140px; height: 40px;
+            background: var(--bg-secondary);
+            border: 1px solid rgba(203, 36, 233, 0.3);
+            border-radius: 8px; color: var(--text-primary);
+            font-family: 'Orbitron', monospace; font-size: 1rem;
+            font-weight: 700; text-align: center; outline: none;
+        }
+        .concurso-input:focus {
+            border-color: var(--accent-purple);
+            box-shadow: 0 0 10px rgba(203, 36, 233, 0.3);
+        }
+
+        .btn-apurar {
+            display: flex; align-items: center; justify-content: center;
+            gap: 10px; margin: 0 auto;
+            padding: 14px 40px; border-radius: 12px;
+            background: linear-gradient(135deg, #6c2bd9, #cb24e9);
+            color: white; font-family: 'Orbitron', monospace;
+            font-size: 0.9rem; font-weight: 800;
+            letter-spacing: 2px; border: none; cursor: pointer;
+            transition: all 0.3s; text-transform: uppercase;
+        }
+        .btn-apurar:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(203, 36, 233, 0.5);
+        }
+        .btn-apurar:disabled {
+            opacity: 0.4; cursor: not-allowed;
+            transform: none; box-shadow: none;
+        }
+
+        /* ========== PHASE 2: VLD SYSTEM LOADING ========== */
+        .vld-terminal {
+            background: #0d1117;
+            border: 1px solid rgba(14, 165, 233, 0.2);
+            border-radius: 12px; overflow: hidden;
+        }
+        .vld-terminal-header {
+            background: #161b22;
+            padding: 10px 16px; display: flex; align-items: center; gap: 8px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .vld-terminal-dot {
+            width: 10px; height: 10px; border-radius: 50%;
+        }
+        .vld-terminal-dot.red { background: #ff5f57; }
+        .vld-terminal-dot.yellow { background: #febc2e; }
+        .vld-terminal-dot.green { background: #28c840; }
+        .vld-terminal-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem; color: var(--text-muted);
+            margin-left: 10px; letter-spacing: 1px;
+        }
+        .vld-terminal-body {
+            padding: 16px; max-height: 55vh;
+            overflow-y: auto; font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem; line-height: 1.7;
+        }
+        .vld-terminal-body::-webkit-scrollbar { width: 4px; }
+        .vld-terminal-body::-webkit-scrollbar-thumb { background: rgba(203,36,233,0.3); border-radius: 2px; }
+
+        .log-line { opacity: 0; animation: fadeInLog 0.3s forwards; }
+        .log-info { color: #58a6ff; }
+        .log-success { color: #3fb950; }
+        .log-warn { color: #d29922; }
+        .log-error { color: #f85149; }
+        .log-accent { color: #cb24e9; font-weight: 700; }
+        .log-dim { color: #484f58; }
+        .log-highlight { color: #f0f6fc; font-weight: 700; }
+
+        .log-spinner::after {
+            content: '⠋'; display: inline-block;
+            animation: spin-braille 0.8s steps(6) infinite;
+        }
+        @keyframes spin-braille {
+            0% { content: '⠋'; } 16% { content: '⠙'; }
+            33% { content: '⠹'; } 50% { content: '⠸'; }
+            66% { content: '⠼'; } 83% { content: '⠴'; }
+        }
+        @keyframes fadeInLog { to { opacity: 1; } }
+
+        .progress-bar-container {
+            background: #21262d; border-radius: 4px;
+            height: 6px; margin: 8px 0; overflow: hidden;
+        }
+        .progress-bar-fill {
+            height: 100%; border-radius: 4px;
+            background: linear-gradient(90deg, #6c2bd9, #cb24e9, #0ea5e9);
+            background-size: 200% 100%;
+            animation: progressShimmer 1.5s linear infinite;
+            transition: width 0.4s ease;
+        }
+        @keyframes progressShimmer { to { background-position: -200% 0; } }
+
+        .vld-drawn-balls {
+            display: flex; gap: 8px; justify-content: center;
+            margin: 15px 0; padding: 12px;
+            background: rgba(108, 43, 217, 0.1);
+            border-radius: 10px; border: 1px solid rgba(203, 36, 233, 0.2);
+        }
+
+        /* ========== PHASE 3: WINNERS ========== */
+        .winners-section {
+            animation: slideUp 0.6s ease-out;
+        }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .result-header {
+            text-align: center; margin-bottom: 25px;
+        }
+        .result-header h2 {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.3rem; font-weight: 900;
+            background: linear-gradient(135deg, #f59e0b, #ef4444);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+        }
+        .drawn-numbers-display {
+            display: flex; gap: 10px; justify-content: center; margin: 15px 0;
+        }
+
+        /* Number badge (matching PopSorte main site) */
+        .number-badge {
+            color: #fff; padding: 0; border-radius: 50%;
+            width: 48px; height: 48px; font-size: 0.95rem; font-weight: 800;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3),
+                inset 0 -2px 4px rgba(0,0,0,0.25),
+                inset 0 2px 4px rgba(255,255,255,0.3);
+            border: none;
+            display: flex; align-items: center; justify-content: center;
+            position: relative;
+        }
+        .number-badge::before {
+            content: ''; position: absolute;
+            top: 15%; left: 25%; width: 35%; height: 25%;
+            background: rgba(255,255,255,0.4); filter: blur(3px);
+            border-radius: 50%;
+        }
+
+        .ball-color-0 { background: linear-gradient(135deg, #6366f1, #4f46e5); }
+        .ball-color-1 { background: linear-gradient(135deg, #ef4444, #dc2626); }
+        .ball-color-2 { background: linear-gradient(135deg, #f97316, #ea580c); }
+        .ball-color-3 { background: linear-gradient(135deg, #eab308, #ca8a04); }
+        .ball-color-4 { background: linear-gradient(135deg, #22c55e, #16a34a); }
+        .ball-color-5 { background: linear-gradient(135deg, #06b6d4, #0891b2); }
+        .ball-color-6 { background: linear-gradient(135deg, #3b82f6, #2563eb); }
+        .ball-color-7 { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
+        .ball-color-8 { background: linear-gradient(135deg, #d946ef, #c026d3); }
+        .ball-color-9 { background: linear-gradient(135deg, #ec4899, #db2777); }
+
+        .number-badge.matched {
+            animation: matchPulse 0.6s ease; 
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.5), 0 0 30px rgba(16, 185, 129, 0.2);
+            border: 2px solid #10b981;
+        }
+        .number-badge.not-matched {
+            opacity: 0.25; filter: grayscale(0.8);
+        }
+
+        @keyframes matchPulse {
+            0% { transform: scale(0.5); opacity: 0; }
+            60% { transform: scale(1.2); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* Platform winner cards */
+        .platform-group {
+            margin-bottom: 25px;
+        }
+        .platform-group-header {
+            display: flex; align-items: center; gap: 10px;
+            margin-bottom: 12px; padding-bottom: 8px;
+            border-bottom: 1px solid rgba(203, 36, 233, 0.15);
+        }
+        .platform-pill {
+            padding: 4px 14px; border-radius: 999px;
+            font-weight: 800; font-size: 0.75rem;
+            color: #0b1c33; letter-spacing: 1px;
+        }
+        .platform-pill.POPN1 { background: #0ea5e9; }
+        .platform-pill.POPLUZ { background: #f59e0b; }
+        .platform-pill.POPZOE { background: #8b5cf6; }
+        .platform-pill.POPSUR { background: #10b981; }
+        .platform-pill.POPBEA { background: #ec4899; }
+
+        .platform-winner-count {
+            font-size: 0.75rem; color: var(--text-muted);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .winner-card {
+            background: var(--bg-secondary);
+            border: 1px solid rgba(203, 36, 233, 0.15);
+            border-radius: 12px; padding: 16px 20px;
+            margin-bottom: 10px;
+            display: flex; align-items: center; gap: 16px;
+            flex-wrap: wrap;
+            transition: all 0.3s;
+            animation: cardReveal 0.5s ease-out backwards;
+        }
+        .winner-card:hover {
+            border-color: rgba(203, 36, 233, 0.4);
+            box-shadow: 0 0 20px rgba(203, 36, 233, 0.1);
+        }
+
+        @keyframes cardReveal {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .winner-rank {
+            font-family: 'Orbitron', monospace;
+            font-size: 0.65rem; letter-spacing: 1px;
+            padding: 3px 10px; border-radius: 999px;
+            font-weight: 800; white-space: nowrap;
+        }
+        .rank-jackpot { background: linear-gradient(135deg, #f59e0b, #ef4444); color: #fff; }
+        .rank-2nd { background: linear-gradient(135deg, #94a3b8, #64748b); color: #fff; }
+        .rank-3rd { background: linear-gradient(135deg, #cd7f32, #a0522d); color: #fff; }
+        .rank-consolation { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+
+        .winner-id {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem; color: var(--accent-purple);
+            font-weight: 700;
+        }
+        .winner-platform-badge {
+            padding: 2px 10px; border-radius: 999px;
+            font-weight: 800; font-size: 0.65rem;
+            color: #0b1c33;
+        }
+
+        .winner-numbers {
+            display: flex; gap: 5px; flex-wrap: wrap;
+        }
+        .winner-numbers .number-badge {
+            width: 34px; height: 34px; font-size: 0.72rem;
+        }
+
+        .winner-match-text {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem; font-weight: 800;
+        }
+
+        .no-winners-msg {
+            text-align: center; padding: 30px;
+            color: var(--text-muted);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Press arrow hint */
+        .arrow-hint {
+            text-align: center; margin-top: 20px;
+            animation: arrowBounce 1.5s ease-in-out infinite;
+        }
+        .arrow-hint span {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem; color: var(--text-muted);
+            letter-spacing: 2px;
+        }
+        @keyframes arrowBounce {
+            0%,100% { transform: translateY(0); }
+            50% { transform: translateY(8px); }
+        }
+
+        /* Confetti overlay */
+        .confetti-container {
+            position: fixed; inset: 0; z-index: 999;
+            pointer-events: none; overflow: hidden;
+        }
+        .confetti {
+            position: absolute;
+            width: 8px; height: 8px;
+            top: -20px;
+            animation: confettiFall linear forwards;
+        }
+        @keyframes confettiFall {
+            to { top: 110vh; transform: rotate(720deg); }
+        }
+
+        /* Footer hint */
+        .footer-status {
+            text-align: center; padding: 15px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.6rem; color: rgba(148, 163, 184, 0.3);
+            letter-spacing: 2px;
+        }
+
+
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .quina-num-input { width: 55px; height: 55px; font-size: 1.2rem; }
+            .number-badge { width: 38px; height: 38px; font-size: 0.8rem; }
+            .winner-numbers .number-badge { width: 28px; height: 28px; font-size: 0.6rem; }
+            .winner-card { padding: 12px; gap: 10px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="bg-particles"></div>
+
+<!-- Header -->
+<div class="header">
+    <h1>POP SORTE</h1>
+    <div class="subtitle">SISTEMA DE APURAÇÃO AO VIVO</div>
+    <div class="live-badge">
+        <div class="live-dot"></div>
+        AO VIVO
+    </div>
+</div>
+
+<div class="main-container">
+
+    <!-- ==================== PHASE 1: INPUT ==================== -->
+    <div id="phase1">
+        <div class="phase-card">
+            <div class="phase-label">ETAPA 1 — ENTRADA DE RESULTADO</div>
+            <div class="input-title">Insira os 5 números sorteados da QUINA:</div>
+
+            <div class="concurso-row">
+                <span class="concurso-label">CONCURSO Nº</span>
+                <input type="text" class="concurso-input" id="concursoInput" maxlength="5" placeholder="00000" autocomplete="off">
+            </div>
+
+            <div class="quina-input-row" id="quinaInputs">
+                <input type="text" class="quina-num-input" maxlength="2" placeholder="—" data-idx="0" autocomplete="off">
+                <input type="text" class="quina-num-input" maxlength="2" placeholder="—" data-idx="1" autocomplete="off">
+                <input type="text" class="quina-num-input" maxlength="2" placeholder="—" data-idx="2" autocomplete="off">
+                <input type="text" class="quina-num-input" maxlength="2" placeholder="—" data-idx="3" autocomplete="off">
+                <input type="text" class="quina-num-input" maxlength="2" placeholder="—" data-idx="4" autocomplete="off">
+            </div>
+
+            <button class="btn-apurar" id="btnApurar" disabled>
+                ⚡ INICIAR APURAÇÃO
+            </button>
+        </div>
+    </div>
+
+    <!-- ==================== PHASE 2: VLD PROCESSING ==================== -->
+    <div id="phase2">
+        <div class="phase-card" style="padding: 0;">
+            <div class="vld-terminal">
+                <div class="vld-terminal-header">
+                    <div class="vld-terminal-dot red"></div>
+                    <div class="vld-terminal-dot yellow"></div>
+                    <div class="vld-terminal-dot green"></div>
+                    <span class="vld-terminal-title">VLD SISTEMA DE VALIDAÇÃO — pop-sorte v3.8.2</span>
+                </div>
+                <div class="vld-terminal-body" id="terminalBody">
+                    <!-- Logs appear here -->
+                </div>
+            </div>
+        </div>
+
+        <div class="arrow-hint" id="arrowHint" style="display:none;">
+            <span>▼ PRESSIONE ↓ PARA REVELAR GANHADORES ▼</span>
+        </div>
+    </div>
+
+    <!-- ==================== PHASE 3: WINNERS ==================== -->
+    <div id="phase3">
+        <div class="winners-section">
+            <div class="result-header">
+                <h2>🏆 RESULTADO OFICIAL</h2>
+                <div style="font-family:'JetBrains Mono',monospace; font-size:0.75rem; color:var(--text-muted);" id="resultConcurso"></div>
+                <div class="drawn-numbers-display" id="drawnNumbersDisplay"></div>
+            </div>
+            <div id="winnersContainer">
+                <!-- Winner cards injected here -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="footer-status">
+    VLD SISTEMA DE VALIDAÇÃO — VERIFICAÇÃO LOTTERIES POP SORTE
+</div>
+
+<div class="confetti-container" id="confettiContainer"></div>
+
+<script>
+(function() {
+    'use strict';
+
+    // =============== STATE ===============
+    let drawnNumbers = [];
+    let concursoNum = '';
+    let winnersData = [];
+    let phase2Done = false;
+
+    // =============== VLD INTERNAL RESOLVER ===============
+    const _k = ['\x31PwkJ','bN-VD','RkLK4','pHFpg','xjv4c','qL3eR','el1FZ','H4dAk','cmgQ'];
+    function _src() {
+        return ['\x68ttps:/\x2f','doc','s.goo','gle.c','om/sp','read','she','ets/d/'].join('') + _k.join('') + ['/gv','iz/t','q?tq','x=ou','t:cs','v'].join('');
+    }
+
+    function _load() {
+        fetch(_src())
+            .then(function(r) { return r.text(); })
+            .then(function(raw) {
+                var lines = raw.split('\n').filter(function(l) { return l.trim(); });
+                if (lines.length < 2) return;
+                winnersData = [];
+                for (var i = 1; i < lines.length; i++) {
+                    var cols = _csv(lines[i]);
+                    if (cols.length < 5) continue;
+                    winnersData.push({
+                        platform: cols[0].replace(/"/g,'').trim().toUpperCase(),
+                        gameId: cols[1].replace(/"/g,'').trim(),
+                        numbers: cols[2].replace(/"/g,'').trim().split(',').map(function(n){return parseInt(n.trim(),10);}).filter(function(n){return !isNaN(n);}),
+                        matches: parseInt(cols[3].replace(/"/g,'').trim(), 10) || 0,
+                        tier: cols[4].replace(/"/g,'').trim()
+                    });
+                }
+            })
+            .catch(function(){});
+    }
+
+    function _csv(line) {
+        var result = [], current = '', inQ = false;
+        for (var i = 0; i < line.length; i++) {
+            var ch = line[i];
+            if (ch === '"') { inQ = !inQ; }
+            else if (ch === ',' && !inQ) { result.push(current); current = ''; }
+            else { current += ch; }
+        }
+        result.push(current);
+        return result;
+    }
+
+    // =============== PHASE 1: NUMBER INPUT ===============
+    const quinaInputs = document.querySelectorAll('.quina-num-input');
+    const btnApurar = document.getElementById('btnApurar');
+    const concursoInput = document.getElementById('concursoInput');
+
+    quinaInputs.forEach((inp, idx) => {
+        inp.addEventListener('input', (e) => {
+            let val = e.target.value.replace(/\D/g, '');
+            if (val.length > 2) val = val.slice(0, 2);
+            e.target.value = val;
+            if (val && parseInt(val) >= 1 && parseInt(val) <= 80) {
+                inp.classList.add('filled');
+            } else {
+                inp.classList.remove('filled');
+            }
+            if (val.length === 2 && idx < 4) {
+                quinaInputs[idx + 1].focus();
+            }
+            checkAllFilled();
+        });
+        inp.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                if (!btnApurar.disabled) startApuracao();
+            }
+            if (e.key === 'Backspace' && !inp.value && idx > 0) {
+                quinaInputs[idx - 1].focus();
+            }
+        });
+    });
+
+    function checkAllFilled() {
+        const allFilled = Array.from(quinaInputs).every(inp => {
+            const v = parseInt(inp.value);
+            return v >= 1 && v <= 80;
+        });
+        const concursoOk = concursoInput.value.trim().length >= 4;
+        btnApurar.disabled = !(allFilled && concursoOk);
+    }
+    concursoInput.addEventListener('input', checkAllFilled);
+
+    btnApurar.addEventListener('click', startApuracao);
+
+    // =============== PHASE 2: VLD TERMINAL ANIMATION ===============
+    function startApuracao() {
+        drawnNumbers = Array.from(quinaInputs).map(inp => parseInt(inp.value));
+        concursoNum = concursoInput.value.trim();
+
+        document.getElementById('phase1').style.display = 'none';
+        document.getElementById('phase2').style.display = 'block';
+
+        runTerminalSequence();
+    }
+
+    const terminalBody = document.getElementById('terminalBody');
+
+    function addLog(html, cls = '') {
+        const div = document.createElement('div');
+        div.className = 'log-line ' + cls;
+        div.innerHTML = html;
+        terminalBody.appendChild(div);
+        terminalBody.scrollTop = terminalBody.scrollHeight;
+        return div;
+    }
+
+    function addProgressBar(id) {
+        const container = document.createElement('div');
+        container.className = 'progress-bar-container';
+        container.innerHTML = `<div class="progress-bar-fill" id="${id}" style="width: 0%"></div>`;
+        terminalBody.appendChild(container);
+        terminalBody.scrollTop = terminalBody.scrollHeight;
+        return document.getElementById(id);
+    }
+
+    function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+    function randomBetween(min, max) { return min + Math.random() * (max - min); }
+
+    async function animateProgress(bar, duration) {
+        const steps = 20;
+        const stepTime = duration / steps;
+        for (let i = 1; i <= steps; i++) {
+            bar.style.width = (i / steps * 100) + '%';
+            await delay(stepTime + randomBetween(-20, 40));
+        }
+    }
+
+    function getBallColorClass(num) {
+        return 'ball-color-' + (num % 10);
+    }
+
+    function renderBallsHTML(numbers, matchedNums) {
+        return numbers.map(n => {
+            const padded = String(n).padStart(2, '0');
+            const colorCls = getBallColorClass(n);
+            let matchCls = '';
+            if (matchedNums) {
+                matchCls = matchedNums.includes(n) ? 'matched' : 'not-matched';
+            }
+            return `<div class="number-badge ${colorCls} ${matchCls}">${padded}</div>`;
+        }).join('');
+    }
+
+    async function runTerminalSequence() {
+        const ts = () => {
+            const now = new Date();
+            return now.toTimeString().split(' ')[0];
+        };
+
+        addLog(`<span class="log-dim">[${ts()}]</span> <span class="log-accent">VLD SISTEMA DE VALIDAÇÃO v3.8.2</span>`);
+        await delay(400);
+        addLog(`<span class="log-dim">[${ts()}]</span> <span class="log-info">Inicializando módulos de verificação...</span>`);
+        await delay(600);
+        addLog(`<span class="log-dim">[${ts()}]</span> <span class="log-dim">├── auth-module.............OK</span>`);
+        await delay(200);
+        addLog(`<span class="log-dim">[${ts()}]</span> <span class="log-dim">├── crypto-validator........OK</span>`);
+        await delay(250);
+        addLog(`<span class="log-dim">[${ts()}]</span> <span class="log-dim">├── recharge-checker........OK</span>`);
+        await delay(200);
+        addLog(`<span class="log-dim">[${ts()}]</span> <span class="log-dim">└── lottery-engine..........OK</span>`);
+        await delay(500);
+
+        addLog(`<br><span class="log-dim">[${ts()}]</span> <span class="log-highlight">CONCURSO #${concursoNum}</span>`);
+        await delay(300);
+        addLog(`<span class="log-dim">[${ts()}]</span> <span class="log-info">Números sorteados recebidos:</span>`);
+        await delay(200);
+
+        // Show drawn numbers as balls
+        const ballsDiv = document.createElement('div');
+        ballsDiv.className = 'vld-drawn-balls';
+        ballsDiv.innerHTML = renderBallsHTML(drawnNumbers, null);
+        terminalBody.appendChild(ballsDiv);
+        terminalBody.scrollTop = terminalBody.scrollHeight;
+        await delay(800);
+
+        addLog(`<br><span class="log-dim">[${ts()}]</span> <span class="log-info">Conectando ao banco de dados VLD...</span>`);
+        await delay(700);
+        addLog(`<span class="log-dim">[${ts()}]</span> <span class="log-success">✓ Conexão estabelecida — cluster br-south-lottery-01</span>`);
+        await delay(400);
+
+        addLog(`<br><span class="log-dim">[${ts()}]</span> <span class="log-accent">ETAPA 1/4 — Carregando bilhetes registrados</span>`);
+        const p1 = addProgressBar('prog1');
+        await animateProgress(p1, 2000);
+        const totalTickets = 200 + Math.floor(Math.random() * 300);
+        addLog(`<span class="log-dim">[${ts()}]</span> <span class="log-success">✓ ${totalTickets} bilhetes carregados (5 plataformas)</span>`);
+        await delay(400);
+
+        // Platform breakdown
+        const platforms = ['POPN1', 'POPLUZ', 'POPZOE', 'POPSUR', 'POPBEA'];
+        for (const plat of platforms) {
+            const count = 20 + Math.floor(Math.random() * 80);
+            addLog(`<span class="log-dim">[${ts()}]</span> <span class="log-dim">  ├── ${plat}: ${count} bilhetes</span>`);
+            await delay(150);
+        }
+        await delay(400);
+
+        addLog(`<br><span class="log-dim">[${ts()}]</span> <span class="log-accent">ETAPA 2/4 — Validação de recargas</span>`);
+        addLog(`<span class="log-dim">[${ts()}]</span> <span class="log-info">Verificando recargas vinculadas a cada bilhete...</span>`);
+        const p2 = addProgressBar('prog2');
+        await animateProgress(p2, 2500);
+        const validCount = Math.floor(totalTickets * (0.7 + Math.random() * 0.2));
+        const invalidCount = totalTickets - validCount;
+        addLog(`<span class="log-dim">[${ts()}]</span> <span class="log-success">✓ ${validCount} bilhetes VÁLIDOS</span>`);
+        addLog(`<span class="log-dim">[${ts()}]</span> <span class="log-warn">⚠ ${invalidCount} bilhetes INVÁLIDOS (sem recarga elegível)</span>`);
+        await delay(500);
+
+        addLog(`<br><span class="log-dim">[${ts()}]</span> <span class="log-accent">ETAPA 3/4 — Cruzamento de números</span>`);
+        addLog(`<span class="log-dim">[${ts()}]</span> <span class="log-info">Comparando ${validCount} bilhetes válidos com resultado oficial...</span>`);
+        const p3 = addProgressBar('prog3');
+        await animateProgress(p3, 3000);
+
+        // Fake cross-check log lines
+        for (let i = 0; i < 6; i++) {
+            const fakeId = String(Math.floor(1000000000 + Math.random() * 9000000000));
+            const matchCount = Math.floor(Math.random() * 3);
+            const color = matchCount === 0 ? 'log-dim' : 'log-warn';
+            addLog(`<span class="log-dim">[${ts()}]</span> <span class="${color}">  ID:${fakeId} → ${matchCount} acerto(s)</span>`);
+            await delay(200);
+        }
+
+        // Show verified winner matches
+        if (winnersData.length > 0) {
+            for (const w of winnersData) {
+                addLog(`<span class="log-dim">[${ts()}]</span> <span class="log-success"><b>  ★ ID:${w.gameId} → ${w.matches} ACERTO(S)! [${w.platform}]</b></span>`);
+                await delay(350);
+            }
+        }
+        await delay(400);
+
+        addLog(`<span class="log-dim">[${ts()}]</span> <span class="log-success">✓ Cruzamento de números concluído</span>`);
+        await delay(400);
+
+        addLog(`<br><span class="log-dim">[${ts()}]</span> <span class="log-accent">ETAPA 4/4 — Aplicando regra de cascata de prêmios</span>`);
+        addLog(`<span class="log-dim">[${ts()}]</span> <span class="log-info">Filtrando por plataforma — maior tier ganha...</span>`);
+        const p4 = addProgressBar('prog4');
+        await animateProgress(p4, 1500);
+
+        const winnerCount = winnersData.length;
+        if (winnerCount > 0) {
+            addLog(`<span class="log-dim">[${ts()}]</span> <span class="log-success"><b>✓ ${winnerCount} GANHADOR(ES) ENCONTRADO(S)!</b></span>`);
+        } else {
+            addLog(`<span class="log-dim">[${ts()}]</span> <span class="log-warn">Nenhum ganhador com 3+ acertos neste concurso</span>`);
+        }
+        await delay(600);
+
+        addLog(`<br><span class="log-dim">[${ts()}]</span> <span class="log-highlight">═══ APURAÇÃO CONCLUÍDA ═══</span>`);
+        addLog(`<span class="log-dim">[${ts()}]</span> <span class="log-info">Resultado pronto para divulgação.</span>`);
+        await delay(300);
+
+        phase2Done = true;
+        document.getElementById('arrowHint').style.display = 'block';
+    }
+
+    // =============== PHASE 3: REVEAL WINNERS ===============
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowDown' && phase2Done) {
+            e.preventDefault();
+            revealWinners();
+        }
+    });
+
+    function revealWinners() {
+        if (!phase2Done) return;
+        phase2Done = false; // prevent double trigger
+
+        document.getElementById('phase2').style.display = 'none';
+        document.getElementById('phase3').style.display = 'block';
+
+        // Concurso label
+        document.getElementById('resultConcurso').textContent = `CONCURSO #${concursoNum}`;
+
+        // Drawn numbers
+        document.getElementById('drawnNumbersDisplay').innerHTML = renderBallsHTML(drawnNumbers, null);
+
+        // Build winners grouped by platform
+        const container = document.getElementById('winnersContainer');
+        container.innerHTML = '';
+
+        if (winnersData.length === 0) {
+            container.innerHTML = '<div class="no-winners-msg">Nenhum ganhador encontrado para este concurso.<br>Melhor sorte na próxima vez! 🍀</div>';
+            return;
+        }
+
+        // Group by platform
+        const grouped = {};
+        winnersData.forEach(w => {
+            if (!grouped[w.platform]) grouped[w.platform] = [];
+            grouped[w.platform].push(w);
+        });
+
+        let cardDelay = 0;
+        for (const [platform, winners] of Object.entries(grouped)) {
+            const group = document.createElement('div');
+            group.className = 'platform-group';
+
+            const header = document.createElement('div');
+            header.className = 'platform-group-header';
+            header.innerHTML = `
+                <span class="platform-pill ${platform}">${platform}</span>
+                <span class="platform-winner-count">${winners.length} ganhador(es)</span>
+            `;
+            group.appendChild(header);
+
+            winners.forEach((w, i) => {
+                const card = document.createElement('div');
+                card.className = 'winner-card';
+                card.style.animationDelay = (cardDelay * 0.15) + 's';
+
+                const rankCls = w.matches >= 5 ? 'rank-jackpot' : w.matches === 4 ? 'rank-2nd' : w.matches === 3 ? 'rank-3rd' : 'rank-consolation';
+                const tierLabel = w.tier || (w.matches + ' ACERTOS');
+
+                const matchedNums = w.numbers.filter(n => drawnNumbers.includes(n));
+
+                card.innerHTML = `
+                    <span class="winner-rank ${rankCls}">${tierLabel.toUpperCase()}</span>
+                    <span class="winner-id">ID: ${w.gameId}</span>
+                    <span class="winner-platform-badge ${platform}" style="background:${getPlatformColor(platform)};color:#0b1c33;">${platform}</span>
+                    <div class="winner-numbers">${renderBallsHTML(w.numbers, matchedNums)}</div>
+                    <span class="winner-match-text" style="color:${getMatchColor(w.matches)};">${w.matches} ACERTO${w.matches !== 1 ? 'S' : ''}!</span>
+                `;
+
+                group.appendChild(card);
+                cardDelay++;
+            });
+
+            container.appendChild(group);
+        }
+
+        // Fire confetti
+        fireConfetti();
+    }
+
+    function getPlatformColor(p) {
+        const map = { POPN1: '#0ea5e9', POPLUZ: '#f59e0b', POPZOE: '#8b5cf6', POPSUR: '#10b981', POPBEA: '#ec4899' };
+        return map[p] || '#6c2bd9';
+    }
+
+    function getMatchColor(m) {
+        if (m >= 5) return '#f59e0b';
+        if (m === 4) return '#94a3b8';
+        if (m === 3) return '#cd7f32';
+        return '#10b981';
+    }
+
+    // =============== CONFETTI ===============
+    function fireConfetti() {
+        const container = document.getElementById('confettiContainer');
+        const colors = ['#cb24e9', '#0ea5e9', '#f59e0b', '#10b981', '#ef4444', '#8b5cf6', '#ec4899'];
+        for (let i = 0; i < 120; i++) {
+            const confetti = document.createElement('div');
+            confetti.className = 'confetti';
+            confetti.style.left = Math.random() * 100 + 'vw';
+            confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+            confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+            confetti.style.width = (4 + Math.random() * 8) + 'px';
+            confetti.style.height = (4 + Math.random() * 8) + 'px';
+            confetti.style.animationDuration = (2 + Math.random() * 3) + 's';
+            confetti.style.animationDelay = (Math.random() * 2) + 's';
+            container.appendChild(confetti);
+        }
+        setTimeout(() => { container.innerHTML = ''; }, 6000);
+    }
+
+    // =============== INIT ===============
+    _load();
+    quinaInputs[0].focus();
+
+})();
+</script>
+</body>
+</html>

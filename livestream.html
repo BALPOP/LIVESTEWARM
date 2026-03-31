@@ -1,0 +1,1295 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>POP SORTE — SISTEMA DE APURAÇÃO AO VIVO</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Orbitron:wght@400;500;600;700;800;900&family=Nunito:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #ffffff;
+            --bg-surface: #f8fafc;
+            --bg-card: #f3f4f6;
+            --border: #e5e7eb;
+            --border-focus: #8b5cf6;
+            --text-primary: #111827;
+            --text-secondary: #374151;
+            --text-muted: #6b7280;
+            --accent-purple: #8b5cf6;
+            --accent-blue: #0ea5e9;
+            --accent-green: #22c55e;
+            --accent-gold: #f59e0b;
+            --accent-red: #ef4444;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            color: var(--text-primary);
+            font-family: 'Inter', 'Outfit', 'Segoe UI', Tahoma, sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* ========== HEADER ========== */
+        .header {
+            text-align: center;
+            padding: 24px 20px 14px;
+            border-bottom: 1px solid var(--border);
+            background: linear-gradient(180deg, #f0f0ff 0%, #ffffff 100%);
+        }
+        .header h1 {
+            font-family: 'Orbitron', monospace;
+            font-size: clamp(1.2rem, 4vw, 2rem);
+            background: linear-gradient(135deg, #8b5cf6, #0ea5e9, #8b5cf6);
+            background-size: 200% auto;
+            -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+            animation: shimmer 3s linear infinite;
+            letter-spacing: 3px;
+        }
+        .header .subtitle {
+            font-family: 'Space Grotesk', 'Inter', sans-serif;
+            color: var(--text-muted); font-size: 0.72rem;
+            margin-top: 5px; letter-spacing: 2px;
+        }
+        .header .live-badge {
+            display: inline-flex; align-items: center; gap: 6px;
+            background: rgba(239, 68, 68, 0.08); border: 1px solid rgba(239, 68, 68, 0.25);
+            padding: 4px 14px; border-radius: 999px; font-size: 0.7rem;
+            font-weight: 800; color: #ef4444; margin-top: 10px;
+            animation: livePulse 1.5s ease-in-out infinite;
+        }
+        .live-dot {
+            width: 8px; height: 8px; background: #ef4444;
+            border-radius: 50%; animation: blink 1s infinite;
+        }
+
+        @keyframes shimmer { to { background-position: 200% center; } }
+        @keyframes livePulse { 0%,100%{opacity:1;} 50%{opacity:0.6;} }
+        @keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0.2;} }
+
+        /* ========== MAIN ========== */
+        .main-container {
+            max-width: 960px; margin: 0 auto; padding: 20px;
+        }
+
+        #phase1 { display: block; }
+        #phase2, #phase3 { display: none; }
+
+        /* ========== PHASE 1: INPUT ========== */
+        .phase-card {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 14px; padding: 28px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+        }
+        .phase-label {
+            font-family: 'Orbitron', monospace;
+            font-size: 0.62rem; letter-spacing: 3px;
+            color: var(--accent-purple); margin-bottom: 14px;
+        }
+        .input-title {
+            font-size: 1.05rem; font-weight: 800;
+            margin-bottom: 18px; color: var(--text-primary);
+        }
+        .quina-input-row {
+            display: flex; gap: 12px; justify-content: center;
+            flex-wrap: wrap; margin-bottom: 22px;
+        }
+        .quina-num-input {
+            width: 68px; height: 68px;
+            background: var(--bg-surface);
+            border: 2px solid var(--border);
+            border-radius: 50%; color: var(--text-primary);
+            font-family: 'Orbitron', monospace; font-size: 1.4rem;
+            font-weight: 900; text-align: center;
+            outline: none; transition: all 0.3s;
+        }
+        .quina-num-input:focus {
+            border-color: var(--accent-purple);
+            box-shadow: 0 0 0 4px rgba(139,92,246,0.15);
+            transform: scale(1.08);
+        }
+        .quina-num-input.filled {
+            border-color: var(--accent-green);
+            background: rgba(34,197,94,0.06);
+            box-shadow: 0 0 0 3px rgba(34,197,94,0.1);
+        }
+        .concurso-row {
+            display: flex; align-items: center; gap: 12px;
+            justify-content: center; margin-bottom: 22px;
+        }
+        .concurso-label {
+            font-family: 'Space Grotesk', 'Inter', sans-serif;
+            font-size: 0.8rem; color: var(--text-muted);
+        }
+        .concurso-input {
+            width: 130px; height: 38px;
+            background: var(--bg-surface); border: 1px solid var(--border);
+            border-radius: 8px; color: var(--text-primary);
+            font-family: 'Orbitron', monospace; font-size: 1rem;
+            font-weight: 700; text-align: center; outline: none;
+        }
+        .concurso-input:focus {
+            border-color: var(--accent-purple);
+            box-shadow: 0 0 0 3px rgba(139,92,246,0.12);
+        }
+        .btn-apurar {
+            display: flex; align-items: center; justify-content: center;
+            gap: 10px; margin: 0 auto;
+            padding: 13px 36px; border-radius: 10px;
+            background: linear-gradient(135deg, #7c3aed, #8b5cf6);
+            color: white; font-family: 'Orbitron', monospace;
+            font-size: 0.85rem; font-weight: 800;
+            letter-spacing: 2px; border: none; cursor: pointer;
+            transition: all 0.3s; text-transform: uppercase;
+        }
+        .btn-apurar:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 24px rgba(139,92,246,0.35);
+        }
+        .btn-apurar:disabled {
+            opacity: 0.35; cursor: not-allowed;
+            transform: none; box-shadow: none;
+        }
+
+        /* ========== PHASE 2: VLD CARD SCAN ========== */
+        .scan-header {
+            text-align: center; margin-bottom: 14px;
+        }
+        .scan-header h2 {
+            font-family: 'Orbitron', monospace;
+            font-size: 0.85rem; font-weight: 900;
+            color: var(--accent-purple); letter-spacing: 2px;
+            margin-bottom: 6px;
+        }
+        .scan-drawn {
+            display: flex; gap: 7px; justify-content: center; margin: 10px 0;
+        }
+        .scan-drawn .number-badge { width: 38px; height: 38px; font-size: 0.82rem; }
+
+        .scan-status-bar {
+            display: flex; align-items: center; justify-content: center;
+            gap: 14px; flex-wrap: wrap;
+            font-family: 'Space Grotesk', 'Inter', sans-serif;
+            font-size: 0.68rem; color: var(--text-muted);
+            margin-bottom: 10px; padding: 8px 14px;
+            background: var(--bg-surface); border: 1px solid var(--border);
+            border-radius: 8px;
+        }
+        .scan-stat-dot {
+            display: inline-block; width: 7px; height: 7px;
+            border-radius: 50%; margin-right: 3px; vertical-align: middle;
+        }
+        .dot-scanned { background: var(--accent-blue); }
+        .dot-valid { background: var(--accent-green); }
+        .dot-invalid { background: var(--accent-red); }
+        .dot-pending { background: #f59e0b; }
+
+        .scan-progress {
+            width: 100%; height: 4px; background: #e5e7eb;
+            border-radius: 4px; margin-bottom: 12px; overflow: hidden;
+        }
+        .scan-progress-fill {
+            height: 100%; border-radius: 4px; width: 0%;
+            background: linear-gradient(90deg, #8b5cf6, #0ea5e9);
+            transition: width 0.3s;
+        }
+
+
+
+        /* VLD Card Grid (matching main site) */
+        .vld-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            max-height: 58vh; overflow-y: auto;
+            padding: 2px;
+        }
+        .vld-grid::-webkit-scrollbar { width: 4px; }
+        .vld-grid::-webkit-scrollbar-thumb { background: rgba(139,92,246,0.2); border-radius: 2px; }
+
+        @media (max-width: 700px) {
+            .vld-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        /* VC Cards (exact match to main site VLD) */
+        .vc-card {
+            background: #f3f4f6; border-radius: 10px;
+            padding: 9px 10px; display: flex; flex-direction: column;
+            align-items: center; text-align: center; gap: 3px;
+            border: 1px solid #e5e7eb; transition: transform 0.2s;
+            overflow: hidden; position: relative;
+            animation: cardPop 0.3s ease-out backwards;
+        }
+        @keyframes cardPop {
+            from { opacity: 0; transform: scale(0.85); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        .vc-valid {
+            background: linear-gradient(180deg, #22c55e 0%, #15803d 100%);
+            border-color: #166534; color: #fff;
+        }
+        .vc-invalid {
+            background: linear-gradient(180deg, #f87171 0%, #991b1b 100%);
+            border-color: #7f1d1d; color: #fff;
+        }
+        .vc-pending {
+            background: #f1f3f5; border-color: #d1d5db; color: #374151;
+        }
+        .vc-header {
+            display: flex; align-items: center; justify-content: center; gap: 6px;
+        }
+        .vc-status {
+            font-size: 7.5px; font-weight: 800; text-transform: uppercase;
+            letter-spacing: 0.5px; padding: 2px 7px; border-radius: 5px;
+            white-space: nowrap; line-height: 1.5;
+        }
+        .vc-st-valid { background: rgba(255,255,255,0.28); color: #fff; }
+        .vc-st-invalid { background: rgba(255,255,255,0.22); color: #fff; }
+        .vc-st-pending { background: rgba(0,0,0,0.07); color: #6b7280; }
+
+        .vc-id {
+            font-size: 10px; font-weight: 800; line-height: 1.2;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        .vc-valid .vc-id, .vc-invalid .vc-id { color: #fff; }
+        .vc-pending .vc-id { color: #1f2937; }
+
+        .vc-balls {
+            display: flex; gap: 3px; flex-wrap: wrap;
+            justify-content: center; margin: 3px 0 2px;
+        }
+        .vc-ball {
+            width: 18px; height: 18px; border-radius: 50%;
+            display: inline-flex; align-items: center; justify-content: center;
+            font-weight: 800; color: #fff; font-size: 7px; line-height: 1;
+        }
+        .vc-ball.ball-color-0 { background: linear-gradient(135deg, #6366f1, #4f46e5); }
+        .vc-ball.ball-color-1 { background: linear-gradient(135deg, #ef4444, #dc2626); }
+        .vc-ball.ball-color-2 { background: linear-gradient(135deg, #f97316, #ea580c); }
+        .vc-ball.ball-color-3 { background: linear-gradient(135deg, #eab308, #ca8a04); }
+        .vc-ball.ball-color-4 { background: linear-gradient(135deg, #22c55e, #16a34a); }
+        .vc-ball.ball-color-5 { background: linear-gradient(135deg, #06b6d4, #0891b2); }
+        .vc-ball.ball-color-6 { background: linear-gradient(135deg, #3b82f6, #2563eb); }
+        .vc-ball.ball-color-7 { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
+        .vc-ball.ball-color-8 { background: linear-gradient(135deg, #d946ef, #c026d3); }
+        .vc-ball.ball-color-9 { background: linear-gradient(135deg, #ec4899, #db2777); }
+
+        .vc-ticket {
+            font-size: 9px; font-weight: 700; opacity: 0.9;
+            padding: 1px 6px; background: rgba(255,255,255,0.18);
+            border-radius: 4px; line-height: 1.5; margin-top: 1px;
+        }
+        .vc-pending .vc-ticket { background: rgba(0,0,0,0.05); }
+
+        .vc-meta {
+            font-size: 8px; font-weight: 600; line-height: 1.4;
+            opacity: 0.88; white-space: nowrap;
+        }
+        .vc-valid .vc-meta, .vc-invalid .vc-meta { color: rgba(255,255,255,0.92); }
+        .vc-pending .vc-meta { color: #6b7280; }
+
+        .vc-time {
+            font-size: 7.5px; opacity: 0.75; font-weight: 600;
+            margin-top: 2px; line-height: 1.3;
+        }
+        .vc-valid .vc-time, .vc-invalid .vc-time { color: rgba(255,255,255,0.8); }
+        .vc-pending .vc-time { color: #9ca3af; }
+
+        .vc-card.vc-scanning {
+            box-shadow: 0 0 0 3px rgba(139,92,246,0.4);
+        }
+
+        /* ========== PHASE 3: WINNERS (light theme) ========== */
+        .winners-section { animation: slideUp 0.6s ease-out; }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .result-header { text-align: center; margin-bottom: 22px; }
+        .result-header h2 {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.2rem; font-weight: 900;
+            color: var(--accent-purple); margin-bottom: 6px;
+        }
+        .drawn-numbers-display {
+            display: flex; gap: 10px; justify-content: center; margin: 12px 0;
+        }
+
+        .number-badge {
+            color: #fff; border-radius: 50%;
+            width: 46px; height: 46px; font-size: 0.92rem; font-weight: 800;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15),
+                inset 0 -2px 4px rgba(0,0,0,0.2),
+                inset 0 2px 4px rgba(255,255,255,0.3);
+            display: flex; align-items: center; justify-content: center;
+            position: relative;
+        }
+        .number-badge::before {
+            content: ''; position: absolute;
+            top: 15%; left: 25%; width: 35%; height: 25%;
+            background: rgba(255,255,255,0.4); filter: blur(3px);
+            border-radius: 50%;
+        }
+
+        .ball-color-0 { background: linear-gradient(135deg, #6366f1, #4f46e5); }
+        .ball-color-1 { background: linear-gradient(135deg, #ef4444, #dc2626); }
+        .ball-color-2 { background: linear-gradient(135deg, #f97316, #ea580c); }
+        .ball-color-3 { background: linear-gradient(135deg, #eab308, #ca8a04); }
+        .ball-color-4 { background: linear-gradient(135deg, #22c55e, #16a34a); }
+        .ball-color-5 { background: linear-gradient(135deg, #06b6d4, #0891b2); }
+        .ball-color-6 { background: linear-gradient(135deg, #3b82f6, #2563eb); }
+        .ball-color-7 { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
+        .ball-color-8 { background: linear-gradient(135deg, #d946ef, #c026d3); }
+        .ball-color-9 { background: linear-gradient(135deg, #ec4899, #db2777); }
+
+        .number-badge.matched {
+            animation: matchPulse 0.6s ease;
+            box-shadow: 0 0 12px rgba(34,197,94,0.4);
+            border: 2px solid #22c55e;
+        }
+        .number-badge.not-matched { opacity: 0.22; filter: grayscale(0.8); }
+
+        @keyframes matchPulse {
+            0% { transform: scale(0.5); opacity: 0; }
+            60% { transform: scale(1.15); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .platform-group { margin-bottom: 22px; }
+        .platform-group-header {
+            display: flex; align-items: center; gap: 10px;
+            margin-bottom: 10px; padding-bottom: 7px;
+            border-bottom: 1px solid var(--border);
+        }
+        .platform-pill {
+            padding: 4px 14px; border-radius: 999px;
+            font-weight: 800; font-size: 0.72rem;
+            color: #fff; letter-spacing: 1px;
+        }
+        .platform-pill.POPN1 { background: #0ea5e9; }
+        .platform-pill.POPLUZ { background: #f59e0b; color: #422006; }
+        .platform-pill.POPZOE { background: #8b5cf6; }
+        .platform-pill.POPSUR { background: #10b981; }
+        .platform-pill.POPBEA { background: #ec4899; }
+
+        .platform-winner-count {
+            font-size: 0.72rem; color: var(--text-muted);
+            font-family: 'Space Grotesk', 'Inter', sans-serif;
+        }
+
+        .winner-card {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 12px; padding: 14px 18px;
+            margin-bottom: 8px;
+            display: flex; align-items: center; gap: 14px;
+            flex-wrap: wrap; transition: all 0.3s;
+            animation: cardReveal 0.5s ease-out backwards;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+        .winner-card:hover {
+            border-color: rgba(139,92,246,0.3);
+            box-shadow: 0 4px 16px rgba(139,92,246,0.08);
+        }
+        @keyframes cardReveal {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .winner-rank {
+            font-family: 'Orbitron', monospace; font-size: 0.62rem;
+            letter-spacing: 1px; padding: 3px 10px; border-radius: 999px;
+            font-weight: 800; white-space: nowrap;
+        }
+        .rank-jackpot { background: linear-gradient(135deg, #f59e0b, #ef4444); color: #fff; }
+        .rank-2nd { background: linear-gradient(135deg, #94a3b8, #64748b); color: #fff; }
+        .rank-3rd { background: linear-gradient(135deg, #cd7f32, #a0522d); color: #fff; }
+        .rank-consolation { background: rgba(34,197,94,0.12); color: #16a34a; }
+
+        .winner-id {
+            font-family: 'Space Grotesk', 'Inter', sans-serif;
+            font-size: 0.78rem; color: var(--accent-purple); font-weight: 700;
+        }
+        .winner-platform-badge {
+            padding: 2px 10px; border-radius: 999px;
+            font-weight: 800; font-size: 0.62rem;
+        }
+        .winner-numbers { display: flex; gap: 5px; flex-wrap: wrap; }
+        .winner-numbers .number-badge { width: 32px; height: 32px; font-size: 0.7rem; }
+
+        .winner-match-text {
+            font-family: 'Space Grotesk', 'Inter', sans-serif;
+            font-size: 0.72rem; font-weight: 800;
+        }
+        .no-winners-msg {
+            text-align: center; padding: 30px;
+            color: var(--text-muted);
+            font-family: 'Space Grotesk', 'Inter', sans-serif;
+        }
+
+        /* ========== POPUP OVERLAY ========== */
+        .popup-overlay {
+            display: none; position: fixed; inset: 0; z-index: 900;
+            background: rgba(0,0,0,0.45); backdrop-filter: blur(6px);
+            align-items: center; justify-content: center;
+        }
+        .popup-overlay.active { display: flex; }
+
+        .popup-box {
+            background: #fff; border-radius: 20px;
+            padding: 40px 36px; text-align: center;
+            max-width: 440px; width: 90%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+            animation: popupBounce 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        @keyframes popupBounce {
+            from { opacity: 0; transform: scale(0.7) translateY(30px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        .popup-icon { font-size: 3rem; margin-bottom: 12px; }
+        .popup-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.05rem; font-weight: 900;
+            color: var(--accent-purple); letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+        .popup-sub {
+            font-size: 0.82rem; color: var(--text-muted);
+            margin-bottom: 22px; line-height: 1.6;
+        }
+        .popup-btn {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 13px 32px; border-radius: 10px;
+            background: linear-gradient(135deg, #7c3aed, #8b5cf6);
+            color: #fff; font-family: 'Orbitron', monospace;
+            font-size: 0.78rem; font-weight: 800;
+            letter-spacing: 1px; border: none; cursor: pointer;
+            transition: all 0.3s;
+        }
+        .popup-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 24px rgba(139,92,246,0.35);
+        }
+
+        /* ========== CONFETTI ========== */
+        .confetti-container {
+            position: fixed; inset: 0; z-index: 999;
+            pointer-events: none; overflow: hidden;
+        }
+        .confetti {
+            position: absolute; width: 8px; height: 8px; top: -20px;
+            animation: confettiFall linear forwards;
+        }
+        @keyframes confettiFall { to { top: 110vh; transform: rotate(720deg); } }
+
+        /* ========== AMBIENT PARTICLES ========== */
+        .particles-bg {
+            position: fixed; inset: 0; z-index: 0;
+            pointer-events: none; overflow: hidden;
+        }
+        .particle {
+            position: absolute; border-radius: 50%;
+            opacity: 0; animation: particleFloat linear infinite;
+        }
+        @keyframes particleFloat {
+            0% { opacity: 0; transform: translateY(0) scale(0); }
+            10% { opacity: 0.6; transform: scale(1); }
+            90% { opacity: 0.3; }
+            100% { opacity: 0; transform: translateY(-100vh) scale(0.5); }
+        }
+
+        /* ========== SCANNING LINE ========== */
+        .vld-grid { position: relative; }
+        .scan-line {
+            position: absolute; left: 0; right: 0; height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent-purple), var(--accent-blue), transparent);
+            box-shadow: 0 0 12px 3px rgba(139,92,246,0.3);
+            z-index: 10; pointer-events: none;
+            animation: scanSweep 2.5s ease-in-out infinite;
+        }
+        @keyframes scanSweep {
+            0% { top: 0; opacity: 0.8; }
+            50% { top: 100%; opacity: 1; }
+            100% { top: 0; opacity: 0.8; }
+        }
+
+        /* ========== ENHANCED CARD ENTRANCE ========== */
+        .vc-card { animation: cardSlideIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) backwards; }
+        @keyframes cardSlideIn {
+            from { opacity: 0; transform: scale(0.6) rotateX(15deg); }
+            to { opacity: 1; transform: scale(1) rotateX(0); }
+        }
+        .vc-card.vc-scanning {
+            box-shadow: 0 0 0 3px rgba(139,92,246,0.4), 0 0 20px rgba(139,92,246,0.15);
+        }
+        .vc-card.vc-valid.vc-scanning {
+            box-shadow: 0 0 0 3px rgba(34,197,94,0.5), 0 0 20px rgba(34,197,94,0.2);
+        }
+
+        /* ========== BALL INPUT BOUNCE ========== */
+        .quina-num-input.filled {
+            animation: ballBounce 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        @keyframes ballBounce {
+            0% { transform: scale(0.8); }
+            50% { transform: scale(1.15); }
+            100% { transform: scale(1); }
+        }
+
+        /* ========== SCREEN FLASH ========== */
+        .screen-flash {
+            position: fixed; inset: 0; z-index: 890;
+            background: white; pointer-events: none;
+            animation: flashBang 0.6s ease-out forwards;
+        }
+        @keyframes flashBang {
+            0% { opacity: 0.9; }
+            100% { opacity: 0; }
+        }
+
+        /* ========== POPUP RIPPLE ========== */
+        .popup-overlay .ripple-ring {
+            position: absolute; border-radius: 50%;
+            border: 2px solid rgba(139,92,246,0.3);
+            animation: rippleExpand 1.5s ease-out forwards;
+            pointer-events: none;
+        }
+        @keyframes rippleExpand {
+            from { width: 0; height: 0; opacity: 1; }
+            to { width: 600px; height: 600px; opacity: 0; }
+        }
+
+        /* ========== POPUP BOX ENHANCED ========== */
+        .popup-box {
+            animation: popupBounce 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative; overflow: visible;
+        }
+        .popup-glow {
+            position: absolute; inset: -3px; border-radius: 22px;
+            background: linear-gradient(135deg, #8b5cf6, #0ea5e9, #22c55e, #f59e0b, #8b5cf6);
+            background-size: 400% 400%;
+            z-index: -1; filter: blur(8px); opacity: 0.6;
+            animation: glowRotate 3s ease infinite;
+        }
+        @keyframes glowRotate {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        /* ========== WINNER CARD ENHANCED ========== */
+        .winner-card.jackpot-winner {
+            border: 1px solid rgba(245,158,11,0.4);
+            background: linear-gradient(135deg, #fffbeb, #ffffff);
+            box-shadow: 0 0 20px rgba(245,158,11,0.1);
+            animation: cardReveal 0.5s ease-out backwards, jackpotGlow 2s ease-in-out infinite;
+        }
+        @keyframes jackpotGlow {
+            0%, 100% { box-shadow: 0 0 12px rgba(245,158,11,0.1); }
+            50% { box-shadow: 0 0 24px rgba(245,158,11,0.25); }
+        }
+
+        /* ========== TROPHY ANIMATION ========== */
+        .result-header .trophy-anim {
+            display: inline-block;
+            animation: trophyBounce 1s ease-in-out infinite;
+        }
+        @keyframes trophyBounce {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            25% { transform: translateY(-8px) rotate(-5deg); }
+            75% { transform: translateY(-4px) rotate(5deg); }
+        }
+
+        /* ========== PHASE TRANSITIONS ========== */
+        .phase-enter {
+            animation: phaseSlideIn 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        @keyframes phaseSlideIn {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ========== NUMBER COUNTER TICK ========== */
+        .stat-tick { animation: statFlash 0.2s ease; }
+        @keyframes statFlash {
+            0% { transform: scale(1.3); color: var(--accent-purple); }
+            100% { transform: scale(1); }
+        }
+
+        /* ========== LIVE BADGE PULSE RING ========== */
+        .header .live-badge { position: relative; }
+        .header .live-badge::before {
+            content: ''; position: absolute; inset: -4px;
+            border: 1px solid rgba(239,68,68,0.3);
+            border-radius: 999px;
+            animation: liveRing 2s ease-out infinite;
+        }
+        @keyframes liveRing {
+            0% { transform: scale(1); opacity: 0.8; }
+            100% { transform: scale(1.3); opacity: 0; }
+        }
+
+        .footer-status {
+            text-align: center; padding: 14px;
+            font-family: 'Space Grotesk', 'Inter', sans-serif;
+            font-size: 0.58rem; color: #d1d5db; letter-spacing: 2px;
+        }
+
+        @media (max-width: 600px) {
+            .quina-num-input { width: 54px; height: 54px; font-size: 1.1rem; }
+            .number-badge { width: 38px; height: 38px; font-size: 0.8rem; }
+            .winner-numbers .number-badge { width: 26px; height: 26px; font-size: 0.58rem; }
+            .winner-card { padding: 10px; gap: 8px; }
+            .scan-drawn .number-badge { width: 32px; height: 32px; font-size: 0.72rem; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="header">
+    <h1>POP SORTE</h1>
+    <div class="subtitle">SISTEMA DE APURAÇÃO AO VIVO</div>
+    <div class="live-badge"><div class="live-dot"></div> AO VIVO</div>
+</div>
+
+<div class="main-container">
+
+    <!-- ===== PHASE 1: INPUT ===== -->
+    <div id="phase1">
+        <div class="phase-card">
+            <div class="phase-label">ETAPA 1 — ENTRADA DE RESULTADO</div>
+            <div class="input-title">Insira os 5 números sorteados da QUINA:</div>
+            <div class="concurso-row">
+                <span class="concurso-label">CONCURSO Nº</span>
+                <input type="text" class="concurso-input" id="concursoInput" maxlength="5" placeholder="00000" autocomplete="off">
+            </div>
+            <div class="quina-input-row" id="quinaInputs">
+                <input type="text" class="quina-num-input" maxlength="2" placeholder="—" data-idx="0" autocomplete="off">
+                <input type="text" class="quina-num-input" maxlength="2" placeholder="—" data-idx="1" autocomplete="off">
+                <input type="text" class="quina-num-input" maxlength="2" placeholder="—" data-idx="2" autocomplete="off">
+                <input type="text" class="quina-num-input" maxlength="2" placeholder="—" data-idx="3" autocomplete="off">
+                <input type="text" class="quina-num-input" maxlength="2" placeholder="—" data-idx="4" autocomplete="off">
+            </div>
+            <button class="btn-apurar" id="btnApurar" disabled>⚡ INICIAR APURAÇÃO</button>
+        </div>
+    </div>
+
+    <!-- ===== PHASE 2: VLD SCAN ===== -->
+    <div id="phase2">
+        <div class="phase-card">
+            <div class="scan-header">
+                <h2>VERIFICANDO BILHETES</h2>
+                <div style="font-size:0.7rem;color:var(--text-muted);font-family:'Space Grotesk','Inter',sans-serif;" id="scanConcurso"></div>
+                <div class="scan-drawn" id="scanDrawn"></div>
+            </div>
+
+            <div class="scan-status-bar" id="scanStatusBar">
+                <span><span class="scan-stat-dot dot-scanned"></span> Verificados: <b id="statScanned">0</b></span>
+                <span><span class="scan-stat-dot dot-valid"></span> Válidos: <b id="statValid">0</b></span>
+                <span><span class="scan-stat-dot dot-invalid"></span> Inválidos: <b id="statInvalid">0</b></span>
+                <span><span class="scan-stat-dot dot-pending"></span> Pendentes: <b id="statPending">0</b></span>
+            </div>
+
+            <div class="scan-progress"><div class="scan-progress-fill" id="scanProgressFill"></div></div>
+
+            <div class="vld-grid" id="vldGrid"></div>
+        </div>
+    </div>
+
+    <!-- ===== PHASE 3: WINNERS ===== -->
+    <div id="phase3">
+        <div class="winners-section">
+            <div class="result-header">
+                <h2><span class="trophy-anim">🏆</span> RESULTADO OFICIAL</h2>
+                <div style="font-family:'Space Grotesk','Inter',sans-serif;font-size:0.72rem;color:var(--text-muted);" id="resultConcurso"></div>
+                <div class="drawn-numbers-display" id="drawnNumbersDisplay"></div>
+            </div>
+            <div id="winnersContainer"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Winner Found Popup -->
+<div class="popup-overlay" id="popupOverlay">
+    <div class="popup-box">
+        <div class="popup-glow"></div>
+        <div class="popup-icon">🏆</div>
+        <div class="popup-title">TODOS OS GANHADORES FORAM ENCONTRADOS!</div>
+        <div class="popup-sub" id="popupSub">Verificação concluída. Pronto para revelar os resultados.</div>
+        <button class="popup-btn" id="popupRevealBtn">REVELAR GANHADORES ▶</button>
+    </div>
+</div>
+
+<div class="particles-bg" id="particlesBg"></div>
+<div class="footer-status">VLD SISTEMA DE VALIDAÇÃO — VERIFICAÇÃO LOTTERIES POP SORTE</div>
+<div class="confetti-container" id="confettiContainer"></div>
+
+<script>
+(function() {
+    'use strict';
+
+    // =============== STATE ===============
+    var drawnNumbers = [];
+    var concursoNum = '';
+    var winnersData = [];
+    var scanRunning = false;
+    var scanTimer = null;
+    var backspaceCount = 0;
+    var backspaceTimeout = null;
+    var stats = { scanned: 0, valid: 0, invalid: 0, pending: 0, total: 0 };
+
+    // =============== VLD INTERNAL RESOLVER ===============
+    // Spreadsheet ID split across array segments to avoid plain-text exposure.
+    var _k = ['\x31PwkJ','bN-VD','RkLK4','pHFpg','xjv4c','qL3eR','el1FZ','H4dAk','cmgQ'];
+
+    /**
+     * Builds the Google Visualization JSON endpoint URL for the target spreadsheet.
+     * Using tqx=out:json avoids all CSV multiline-cell parsing issues (Column J
+     * contains newlines within a single cell — prize on the second line — which
+     * breaks naive split-by-newline CSV parsing).
+     * @returns {string} Full URL for the gviz/tq JSON endpoint.
+     */
+    function _src() {
+        return 'https://docs.google.com/spreadsheets/d/' + _k.join('') + '/gviz/tq?tqx=out:json&gid=0';
+    }
+
+    /**
+     * Parses a single comma-separated numbers string (e.g. "1, 17, 48") into
+     * a sorted array of integers, ignoring any non-numeric tokens.
+     * @param {string} str - Raw comma-separated string from the spreadsheet cell.
+     * @returns {number[]} Sorted array of valid integers.
+     */
+    function _parseNums(str) {
+        if (!str) return [];
+        return String(str).split(',').map(function(n) {
+            return parseInt(n.trim(), 10);
+        }).filter(function(n) { return !isNaN(n) && n > 0; }).sort(function(a, b) { return a - b; });
+    }
+
+    /**
+     * Extracts the first "R$ X.XX" price token found in a raw cell string.
+     * Column J may contain text like "AGT844-BEA6989\nR$ 225.00".
+     * @param {string} raw - Raw string value from the cell.
+     * @returns {string} Formatted prize string, e.g. "R$ 225.00", or empty string.
+     */
+    function _extractPrize(raw) {
+        if (!raw) return '';
+        var m = String(raw).match(/R\$\s?([\d.,]+)/);
+        return m ? 'R$ ' + m[1] : '';
+    }
+
+    /**
+     * Safely reads a cell value from a gviz JSON row, returning a string.
+     * Handles null cells (gviz emits null for empty cells) gracefully.
+     * @param {Object} row - A gviz table row object with a .c array.
+     * @param {number} idx - Column index to read.
+     * @returns {string} Cell value as trimmed string, or empty string if null/missing.
+     */
+    function _cell(row, idx) {
+        var cell = row.c && row.c[idx];
+        if (!cell || cell.v === null || cell.v === undefined) return '';
+        return String(cell.v).trim();
+    }
+
+    /**
+     * Parses the raw text response from the gviz JSON endpoint.
+     * The response is JSONP-wrapped: `/*O_o*\/\ngoogle.visualization.Query.setResponse({...});`
+     * We strip the wrapper and parse the inner JSON.
+     * @param {string} raw - Full response text from the gviz endpoint.
+     * @returns {Object|null} Parsed gviz response object, or null on failure.
+     */
+    function _parseGvizJSON(raw) {
+        try {
+            // Strip JSONP wrapper: everything before the first '{' and after the last '}'
+            var start = raw.indexOf('{');
+            var end = raw.lastIndexOf('}');
+            if (start === -1 || end === -1) return null;
+            return JSON.parse(raw.substring(start, end + 1));
+        } catch (e) {
+            console.error('[VLD] JSON parse error:', e);
+            return null;
+        }
+    }
+
+    /**
+     * Builds a single winnersData entry from a gviz table row.
+     * Column mapping (0-indexed, matching the spreadsheet structure):
+     *   0  (A) = TOTAL DE NÚMEROS CORRETOS  (match count)
+     *   1  (B) = DATA E HORÁRIO DE REGISTRO (registration date/time)
+     *   2  (C) = PLATAFORMA                 (platform code)
+     *   3  (D) = ID DO JOGO                 (game ID)
+     *   4  (E) = NÚMEROS ESCOLHIDOS         (player's chosen numbers)
+     *   5  (F) = OS NÚMEROS VENCEDORES      (drawn winning numbers)
+     *   6  (G) = NÚMEROS VENCEDORES ENTRE OS ESCOLHIDOS (intersection)
+     *   7  (H) = DATA DO SORTEIO            (draw date)
+     *   8  (I) = CONCURSO                   (contest number)
+     *   9  (J) = COMPROVANTE / VALIDAÇÃO    (validation ID + prize on next line)
+     *   10 (K) = REVALIDANDO                (revalidation string)
+     * @param {Object} row - A gviz table row object.
+     * @returns {Object|null} Structured winner entry, or null if row is invalid.
+     */
+    function _buildEntry(row) {
+        var platform = _cell(row, 2).toUpperCase();
+        if (!platform) return null;
+
+        var validPlatforms = ['POPN1', 'POPLUZ', 'POPZOE', 'POPSUR', 'POPBEA'];
+        if (validPlatforms.indexOf(platform) === -1) return null;
+
+        var gameId = _cell(row, 3);
+        if (!gameId) return null;
+
+        // Column A is numeric in gviz JSON — read directly from .v for accuracy
+        var matchCell = row.c && row.c[0];
+        var matches = (matchCell && matchCell.v !== null) ? parseInt(matchCell.v, 10) : 0;
+        if (isNaN(matches)) matches = 0;
+
+        // Column J: validation string — may include newlines with R$ prize on a separate line
+        var tierRaw = _cell(row, 9);
+        var prize = _extractPrize(tierRaw);
+
+        // If no prize found in col J, check col K revalidation string as fallback
+        if (!prize) prize = _extractPrize(_cell(row, 10));
+
+        return {
+            platform:       platform,
+            gameId:         gameId,
+            matches:        matches,
+            numbers:        _parseNums(_cell(row, 4)),
+            winNumbers:     _parseNums(_cell(row, 5)),
+            matchedNumbers: _parseNums(_cell(row, 6)),
+            regDate:        _cell(row, 1),
+            drawDate:       _cell(row, 7),
+            concurso:       _cell(row, 8),
+            tier:           tierRaw,
+            prize:          prize
+        };
+    }
+
+    /**
+     * Fetches winner data from the Google Sheets gviz JSON endpoint, parses it,
+     * and populates the global winnersData array.
+     * Falls back to a retry once after 3 seconds on network failure.
+     * @param {number} [attempt=1] - Current attempt number (max 2).
+     */
+    function _load(attempt) {
+        attempt = attempt || 1;
+        fetch(_src())
+            .then(function(r) {
+                if (!r.ok) throw new Error('HTTP ' + r.status);
+                return r.text();
+            })
+            .then(function(raw) {
+                var parsed = _parseGvizJSON(raw);
+                if (!parsed || !parsed.table || !parsed.table.rows) {
+                    console.warn('[VLD] No table data in gviz response.');
+                    return;
+                }
+
+                var rows = parsed.table.rows;
+                var newData = [];
+                for (var i = 0; i < rows.length; i++) {
+                    var entry = _buildEntry(rows[i]);
+                    if (entry) newData.push(entry);
+                }
+
+                // Sort descending by match count so jackpots appear first
+                newData.sort(function(a, b) { return b.matches - a.matches; });
+
+                winnersData = newData;
+                console.log('[VLD] Loaded ' + winnersData.length + ' winner entries.');
+            })
+            .catch(function(err) {
+                console.error('[VLD] Fetch error (attempt ' + attempt + '):', err);
+                // Retry once after 3 seconds on first failure
+                if (attempt < 2) {
+                    setTimeout(function() { _load(2); }, 3000);
+                }
+            });
+    }
+
+    // =============== HELPERS ===============
+    function getBallColorClass(n) { return 'ball-color-' + (n % 10); }
+
+    function renderBallsHTML(numbers, matchedNums) {
+        return numbers.map(function(n) {
+            var p = String(n).padStart(2, '0');
+            var m = '';
+            if (matchedNums) m = matchedNums.indexOf(n) >= 0 ? 'matched' : 'not-matched';
+            return '<div class="number-badge ' + getBallColorClass(n) + ' ' + m + '">' + p + '</div>';
+        }).join('');
+    }
+
+    function randInt(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+    function randItem(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+    function pad2(n) { return String(n).padStart(2, '0'); }
+
+    // =============== FAKE ENTRY GENERATOR ===============
+    var PLATFORMS = ['POPN1', 'POPLUZ', 'POPZOE', 'POPSUR', 'POPBEA'];
+    var STATUS_WEIGHTS = [
+        { s: 'valid', w: 55 },
+        { s: 'invalid', w: 30 },
+        { s: 'pending', w: 15 }
+    ];
+
+    function pickStatus() {
+        var r = Math.random() * 100, cum = 0;
+        for (var i = 0; i < STATUS_WEIGHTS.length; i++) {
+            cum += STATUS_WEIGHTS[i].w;
+            if (r < cum) return STATUS_WEIGHTS[i].s;
+        }
+        return 'valid';
+    }
+
+    function genNums() {
+        var s = {};
+        while (Object.keys(s).length < 5) s[randInt(1, 80)] = true;
+        return Object.keys(s).map(Number).sort(function(a,b){return a-b;});
+    }
+
+    function genId() { return String(randInt(1000000000, 9999999999)); }
+
+    function genWa() { return '📱 ****' + pad2(randInt(0, 99)) + pad2(randInt(0, 99)); }
+
+    function genTs() {
+        var h = randInt(8, 23), m = randInt(0, 59), s = randInt(0, 59);
+        var d = randInt(1, 28), mo = randInt(1, 12);
+        return '📅 ' + pad2(d) + '/' + pad2(mo) + '/2026 ' + pad2(h) + ':' + pad2(m) + ':' + pad2(s);
+    }
+
+    function genTicket() { return randInt(1, 5) + 'º bilhete'; }
+
+    function buildCard(e) {
+        var sc = e.status;
+        var sl = sc === 'valid' ? 'VÁLIDO' : sc === 'invalid' ? 'INVÁLIDO' : 'PENDENTE';
+        var balls = e.numbers.map(function(n) {
+            return '<span class="vc-ball ball-color-' + (n % 10) + '">' + pad2(n) + '</span>';
+        }).join('');
+        return '<div class="vc-header"><span class="vc-status vc-st-' + sc + '">' + sl + '</span><span class="vc-id">ID: ' + e.gameId + '</span></div>' +
+            '<div class="vc-balls">' + balls + '</div>' +
+            '<div class="vc-ticket">' + e.ticket + '</div>' +
+            '<div class="vc-meta">' + e.whatsapp + ' | ' + concursoNum + ' | 🏢 ' + e.platform + '</div>' +
+            '<div class="vc-time">' + e.timestamp + '</div>';
+    }
+
+    // =============== PHASE 1 ===============
+    var quinaInputs = document.querySelectorAll('.quina-num-input');
+    var btnApurar = document.getElementById('btnApurar');
+    var concursoInput = document.getElementById('concursoInput');
+
+    quinaInputs.forEach(function(inp, idx) {
+        inp.addEventListener('input', function(e) {
+            var val = e.target.value.replace(/\D/g, '').slice(0, 2);
+            e.target.value = val;
+            if (val && parseInt(val) >= 1 && parseInt(val) <= 80) inp.classList.add('filled');
+            else inp.classList.remove('filled');
+            if (val.length === 2 && idx < 4) quinaInputs[idx + 1].focus();
+            checkReady();
+        });
+        inp.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !btnApurar.disabled) { e.preventDefault(); startApuracao(); }
+            if (e.key === 'Backspace' && !inp.value && idx > 0) quinaInputs[idx - 1].focus();
+        });
+    });
+
+    function checkReady() {
+        var allOk = Array.from(quinaInputs).every(function(i) { var v = parseInt(i.value); return v >= 1 && v <= 80; });
+        btnApurar.disabled = !(allOk && concursoInput.value.trim().length >= 4);
+    }
+    concursoInput.addEventListener('input', checkReady);
+    btnApurar.addEventListener('click', startApuracao);
+
+    // =============== PHASE 2: VLD SCAN ===============
+    var vldGrid = document.getElementById('vldGrid');
+
+    function startApuracao() {
+        drawnNumbers = Array.from(quinaInputs).map(function(i) { return parseInt(i.value); });
+        concursoNum = concursoInput.value.trim();
+
+        document.getElementById('phase1').style.display = 'none';
+        var p2 = document.getElementById('phase2');
+        p2.style.display = 'block';
+        p2.classList.add('phase-enter');
+
+        // Add scanning line to grid
+        var scanLine = document.createElement('div');
+        scanLine.className = 'scan-line';
+        vldGrid.appendChild(scanLine);
+
+        document.getElementById('scanConcurso').textContent = 'CONCURSO #' + concursoNum;
+        document.getElementById('scanDrawn').innerHTML = renderBallsHTML(drawnNumbers, null);
+
+        stats = { scanned: 0, valid: 0, invalid: 0, pending: 0, total: 99999999 };
+        updateStats();
+        scanRunning = true;
+        runScan();
+    }
+
+    function runScan() {
+        if (!scanRunning) return;
+
+        // Slower burst: add 1-2 cards per frame
+        var burst = randInt(1, 2);
+        for (var i = 0; i < burst; i++) {
+            var entry = {
+                gameId: genId(),
+                platform: randItem(PLATFORMS),
+                numbers: genNums(),
+                status: pickStatus(),
+                whatsapp: genWa(),
+                timestamp: genTs(),
+                ticket: genTicket()
+            };
+            stats.scanned++;
+            if (entry.status === 'valid') stats.valid++;
+            else if (entry.status === 'invalid') stats.invalid++;
+            else stats.pending++;
+            var card = document.createElement('div');
+            card.className = 'vc-card vc-' + entry.status + ' vc-scanning';
+            card.innerHTML = buildCard(entry);
+            vldGrid.insertBefore(card, vldGrid.firstChild);
+            setTimeout((function(card){ return function(){ card.classList.remove('vc-scanning'); }; })(card), 250);
+        }
+        updateStats();
+        var pct = 95;
+        document.getElementById('scanProgressFill').style.width = pct + '%';
+
+        // Keep only the most recent 200 cards in DOM for perf
+        while (vldGrid.children.length > 200) vldGrid.removeChild(vldGrid.lastChild);
+
+        // Loop forever until stopped by triggerFound
+        if (scanRunning) {
+            scanTimer = setTimeout(runScan, randInt(180, 320));
+        }
+    }
+
+    function updateStats() {
+        var els = [
+            ['statScanned', stats.scanned],
+            ['statValid', stats.valid],
+            ['statInvalid', stats.invalid],
+            ['statPending', stats.pending]
+        ];
+        els.forEach(function(pair) {
+            var el = document.getElementById(pair[0]);
+            el.textContent = pair[1];
+            el.classList.remove('stat-tick');
+            void el.offsetWidth;
+            el.classList.add('stat-tick');
+        });
+    }
+
+    // =============== 3x BACKSPACE → POPUP ===============
+    document.addEventListener('keydown', function(e) {
+        if (!scanRunning) return;
+        if (e.key !== 'Backspace') { backspaceCount = 0; return; }
+        e.preventDefault();
+
+        backspaceCount++;
+        clearTimeout(backspaceTimeout);
+
+        if (backspaceCount >= 3) {
+            backspaceCount = 0;
+            triggerFound();
+        }
+    });
+
+    function triggerFound() {
+        scanRunning = false;
+        clearTimeout(scanTimer);
+
+        document.getElementById('scanProgressFill').style.width = '100%';
+
+        // Remove scan line
+        var sl = vldGrid.querySelector('.scan-line');
+        if (sl) sl.remove();
+
+        // Screen flash!
+        var flash = document.createElement('div');
+        flash.className = 'screen-flash';
+        document.body.appendChild(flash);
+        setTimeout(function() { flash.remove(); }, 700);
+
+        // Only count winners with valid platform and valid gameId
+        var validPlatforms = ['POPN1','POPLUZ','POPZOE','POPSUR','POPBEA'];
+        var winnerList = winnersData.filter(function(w) {
+            return w.platform && validPlatforms.indexOf(w.platform) !== -1 && w.gameId;
+        });
+        var wc = winnerList.length;
+        var platformsSet = {};
+        winnerList.forEach(function(w) {
+            platformsSet[w.platform] = true;
+        });
+        var pc = Object.keys(platformsSet).length;
+
+        document.getElementById('popupSub').innerHTML =
+            'Verificação concluída.<br><b>' + wc + ' ganhador' + (wc !== 1 ? 'es' : '') + '</b> encontrado' + (wc !== 1 ? 's' : '') + ' em <b>' + pc + ' plataforma' + (pc !== 1 ? 's' : '') + '</b>.<br>Pronto para revelar os resultados.';
+
+        var overlay = document.getElementById('popupOverlay');
+        overlay.classList.add('active');
+
+        // Spawn ripple rings
+        for (var ri = 0; ri < 3; ri++) {
+            (function(delay) {
+                setTimeout(function() {
+                    var ring = document.createElement('div');
+                    ring.className = 'ripple-ring'; 
+                    ring.style.left = '50%'; ring.style.top = '50%';
+                    ring.style.marginLeft = '-300px'; ring.style.marginTop = '-300px';
+                    overlay.appendChild(ring);
+                    setTimeout(function() { ring.remove(); }, 1600);
+                }, delay * 300);
+            })(ri);
+        }
+    }
+
+    document.getElementById('popupRevealBtn').addEventListener('click', function() {
+        document.getElementById('popupOverlay').classList.remove('active');
+        revealWinners();
+    });
+
+    // =============== PHASE 3: WINNERS ===============
+    function revealWinners() {
+        document.getElementById('phase2').style.display = 'none';
+        var p3 = document.getElementById('phase3');
+        p3.style.display = 'block';
+        p3.classList.add('phase-enter');
+
+        document.getElementById('resultConcurso').textContent = 'CONCURSO #' + concursoNum;
+        document.getElementById('drawnNumbersDisplay').innerHTML = renderBallsHTML(drawnNumbers, null);
+
+        var container = document.getElementById('winnersContainer');
+        container.innerHTML = '';
+
+        if (winnersData.length === 0) {
+            container.innerHTML = '<div class="no-winners-msg">Nenhum ganhador encontrado para este concurso.<br>Melhor sorte na próxima vez! 🍀</div>';
+            return;
+        }
+
+        // Redesign: show one winner per card, in order, with platform, gameId, acertos, bola pilihan (highlighted), and bonus
+        var cardDelay = 0;
+        winnersData.forEach(function(w) {
+            var card = document.createElement('div');
+            card.className = 'winner-card';
+            card.style.animationDelay = (cardDelay * 0.15) + 's';
+
+            var isJackpot = w.matches >= 5;
+            var rankCls = isJackpot ? 'rank-jackpot' : w.matches === 4 ? 'rank-2nd' : w.matches === 3 ? 'rank-3rd' : 'rank-consolation';
+            if (isJackpot) card.classList.add('jackpot-winner');
+            var tierLabel = w.tier || (w.matches + ' ACERTOS');
+            var matchedNums = w.numbers.filter(function(n) { return drawnNumbers.indexOf(n) >= 0; });
+
+            // Helper for bola highlight
+            function renderUserBallsHTML(numbers, matched) {
+                return numbers.map(function(n) {
+                    var isMatch = matched.indexOf(n) !== -1;
+                    return '<span class="number-badge" style="background:' + (isMatch ? '#f59e0b' : '#e5e7eb') + ';color:' + (isMatch ? '#fff' : '#a3a3a3') + ';font-weight:800;box-shadow:0 1px 4px ' + (isMatch ? '#f59e0b44' : 'none') + ';">' + String(n).padStart(2, '0') + '</span>';
+                }).join('');
+            }
+            function renderDrawnBallsHTML(numbers) {
+                return numbers.map(function(n) {
+                    return '<span class="number-badge ball-color-' + (n % 10) + '">' + String(n).padStart(2, '0') + '</span>';
+                }).join('');
+            }
+            function renderMatchedBallsHTML(numbers) {
+                return numbers.map(function(n) {
+                    return '<span class="number-badge" style="background:#22c55e;color:#fff;font-weight:800;box-shadow:0 1px 4px #22c55e44;">' + String(n).padStart(2, '0') + '</span>';
+                }).join('');
+            }
+
+            card.innerHTML =
+                '<div class="winner-card-header" style="display:flex;align-items:center;gap:10px;margin-bottom:6px;flex-wrap:wrap;">'
+                    + '<span class="winner-platform-badge" style="background:' + getPlatformColor(w.platform) + ';color:#fff;border-radius:999px;padding:4px 14px;font-weight:800;font-size:0.82rem;letter-spacing:1px;">' + w.platform + '</span>'
+                    + '<span class="winner-rank ' + rankCls + '" style="margin-left:0;">' + tierLabel.toUpperCase() + '</span>'
+                    + (w.prize ? '<span class="winner-prize" style="display:inline-block;margin-left:8px;padding:4px 14px;border-radius:8px;background:linear-gradient(90deg,#f59e0b,#fbbf24);color:#fff;font-weight:900;font-size:0.95em;box-shadow:0 2px 8px #f59e0b22;">🏅 ' + w.prize + '</span>' : '')
+                    + '<span class="winner-match-text" style="color:' + getMatchColor(w.matches) + ';margin-left:8px;font-size:0.92em;font-weight:800;">' + w.matches + ' ACERTO' + (w.matches !== 1 ? 'S' : '') + '!</span>'
+                + '</div>'
+                + '<div class="winner-card-info" style="display:flex;flex-wrap:wrap;gap:18px 32px;margin-bottom:7px;align-items:center;">'
+                    + '<span class="winner-id" style="font-size:0.92em;color:var(--accent-purple);font-weight:700;">ID: ' + w.gameId + '</span>'
+                    + (w.concurso ? '<span class="winner-concurso" style="font-size:0.92em;color:var(--accent-blue);font-weight:700;">CONCURSO: ' + w.concurso + '</span>' : '')
+                    + (w.drawDate ? '<span class="winner-date" style="font-size:0.92em;color:var(--text-muted);">SORTEIO: ' + w.drawDate + '</span>' : '')
+                    + (w.regDate ? '<span class="winner-regdate" style="font-size:0.92em;color:var(--text-muted);">REGISTRO: ' + w.regDate + '</span>' : '')
+                + '</div>'
+                + '<div class="winner-numbers-row" style="display:flex;flex-wrap:wrap;gap:18px 32px;align-items:center;">'
+                    + '<div class="winner-numbers-block"><div style="font-size:0.78em;color:var(--text-muted);font-weight:700;margin-bottom:2px;">NÚMEROS ESCOLHIDOS</div>'
+                        + '<div class="winner-numbers">' + renderUserBallsHTML(w.numbers, matchedNums) + '</div></div>'
+                    + (drawnNumbers && drawnNumbers.length ? '<div class="winner-numbers-block"><div style="font-size:0.78em;color:var(--text-muted);font-weight:700;margin-bottom:2px;">NÚMEROS VENCEDORES</div>'
+                        + '<div class="winner-numbers">' + renderDrawnBallsHTML(drawnNumbers) + '</div></div>' : '')
+                    + (w.matchedNumbers && w.matchedNumbers.length ? '<div class="winner-numbers-block"><div style="font-size:0.78em;color:var(--text-muted);font-weight:700;margin-bottom:2px;">NÚMEROS CERTOS</div>'
+                        + '<div class="winner-numbers">' + renderMatchedBallsHTML(w.matchedNumbers) + '</div></div>' : '')
+                + '</div>';
+
+            container.appendChild(card);
+            cardDelay++;
+        });
+
+        fireConfetti();
+    }
+
+    function getPlatformColor(p) {
+        return { POPN1: '#0ea5e9', POPLUZ: '#d97706', POPZOE: '#8b5cf6', POPSUR: '#10b981', POPBEA: '#ec4899' }[p] || '#7c3aed';
+    }
+    function getMatchColor(m) {
+        if (m >= 5) return '#d97706';
+        if (m === 4) return '#64748b';
+        if (m === 3) return '#a0522d';
+        return '#16a34a';
+    }
+
+    // =============== CONFETTI ===============
+    function fireConfetti() {
+        var ct = document.getElementById('confettiContainer');
+        var cl = ['#8b5cf6', '#0ea5e9', '#f59e0b', '#22c55e', '#ef4444', '#ec4899', '#6366f1'];
+        for (var i = 0; i < 120; i++) {
+            var c = document.createElement('div');
+            c.className = 'confetti';
+            c.style.left = Math.random() * 100 + 'vw';
+            c.style.background = cl[Math.floor(Math.random() * cl.length)];
+            c.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+            c.style.width = (4 + Math.random() * 8) + 'px';
+            c.style.height = (4 + Math.random() * 8) + 'px';
+            c.style.animationDuration = (2 + Math.random() * 3) + 's';
+            c.style.animationDelay = (Math.random() * 2) + 's';
+            ct.appendChild(c);
+        }
+        setTimeout(function() { ct.innerHTML = ''; }, 6000);
+    }
+
+    // =============== AMBIENT PARTICLES ===============
+    function spawnParticles() {
+        var ct = document.getElementById('particlesBg');
+        var colors = ['rgba(139,92,246,0.25)', 'rgba(14,165,233,0.2)', 'rgba(34,197,94,0.15)', 'rgba(245,158,11,0.15)', 'rgba(236,72,153,0.15)'];
+        function emit() {
+            if (ct.children.length > 25) {
+                ct.removeChild(ct.firstChild);
+            }
+            var p = document.createElement('div');
+            p.className = 'particle';
+            var sz = 3 + Math.random() * 6;
+            p.style.width = sz + 'px';
+            p.style.height = sz + 'px';
+            p.style.left = Math.random() * 100 + '%';
+            p.style.bottom = '-10px';
+            p.style.background = colors[Math.floor(Math.random() * colors.length)];
+            p.style.animationDuration = (6 + Math.random() * 8) + 's';
+            p.style.animationDelay = '0s';
+            ct.appendChild(p);
+            setTimeout(function() { if (p.parentNode) p.remove(); }, 14000);
+        }
+        setInterval(emit, 800);
+        for (var i = 0; i < 8; i++) setTimeout(emit, i * 200);
+    }
+
+    // =============== INIT ===============
+    _load();
+    spawnParticles();
+    quinaInputs[0].focus();
+
+})();
+</script>
+</body>
+</html>

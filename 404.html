@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>404 | POP-SORTE</title>
+  <link rel="icon" type="image/png" href="media/qui.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-1: #0f0c29;
+      --bg-2: #302b63;
+      --bg-3: #24243e;
+      --card: rgba(255, 255, 255, 0.08);
+      --text: #f8fafc;
+      --text-soft: #cbd5e1;
+      --primary: #8b5cf6;
+      --primary-strong: #7c3aed;
+      --cyan: #22d3ee;
+      --gold: #facc15;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: 'Inter', 'Segoe UI', sans-serif;
+      color: var(--text);
+      background: linear-gradient(135deg, var(--bg-1), var(--bg-2), var(--bg-3));
+      overflow: hidden;
+      display: grid;
+      place-items: center;
+      position: relative;
+    }
+
+    .bg-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(48px);
+      opacity: 0.5;
+      pointer-events: none;
+      animation: float 8s ease-in-out infinite alternate;
+    }
+
+    .orb-a {
+      width: 240px;
+      height: 240px;
+      background: #8b5cf6;
+      top: 8%;
+      left: 10%;
+    }
+
+    .orb-b {
+      width: 220px;
+      height: 220px;
+      background: #22d3ee;
+      right: 8%;
+      bottom: 12%;
+      animation-delay: 1.5s;
+    }
+
+    .orb-c {
+      width: 180px;
+      height: 180px;
+      background: #facc15;
+      top: 55%;
+      left: 35%;
+      animation-delay: 0.7s;
+      opacity: 0.35;
+    }
+
+    @keyframes float {
+      from { transform: translateY(-6px) translateX(0); }
+      to { transform: translateY(12px) translateX(10px); }
+    }
+
+    .card {
+      width: min(92vw, 660px);
+      text-align: center;
+      background: var(--card);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-radius: 24px;
+      padding: 32px 24px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+      position: relative;
+      z-index: 2;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      color: #e2e8f0;
+    }
+
+    .brand img {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+    }
+
+    .code {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(3rem, 13vw, 7rem);
+      line-height: 1;
+      letter-spacing: 0.05em;
+      color: #fff;
+      text-shadow:
+        0 0 16px rgba(139, 92, 246, 0.7),
+        0 0 28px rgba(34, 211, 238, 0.45);
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      font-size: clamp(1.3rem, 2.8vw, 2rem);
+      margin-bottom: 10px;
+    }
+
+    p {
+      color: var(--text-soft);
+      line-height: 1.6;
+      max-width: 56ch;
+      margin: 0 auto 20px;
+    }
+
+    .actions {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 8px;
+    }
+
+    .btn {
+      border: none;
+      text-decoration: none;
+      padding: 12px 18px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), var(--primary-strong));
+      color: #fff;
+      box-shadow: 0 12px 24px rgba(124, 58, 237, 0.35);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.1);
+      color: #f1f5f9;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .btn-primary:hover {
+      box-shadow: 0 16px 30px rgba(124, 58, 237, 0.45);
+    }
+
+    .tip {
+      margin-top: 20px;
+      font-size: 0.88rem;
+      color: #93c5fd;
+    }
+
+    @media (max-width: 540px) {
+      .card {
+        padding: 24px 18px;
+        border-radius: 18px;
+      }
+
+      .btn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <span class="bg-orb orb-a" aria-hidden="true"></span>
+  <span class="bg-orb orb-b" aria-hidden="true"></span>
+  <span class="bg-orb orb-c" aria-hidden="true"></span>
+
+  <main class="card" role="main">
+    <div class="brand">
+      <img src="media/qui.png" alt="POP-SORTE" />
+      <span>POP-SORTE</span>
+    </div>
+
+    <div class="code">404</div>
+    <h1>Ops... essa página não foi sorteada</h1>
+    <p>
+      A rota que você tentou acessar não existe, foi movida ou digitada incorretamente.
+      Bora voltar para o início e continuar na sorte?
+    </p>
+
+    <div class="actions">
+      <a class="btn btn-primary" href="index.html">Voltar para o início</a>
+      <button class="btn btn-secondary" type="button" onclick="history.back()">Página anterior</button>
+    </div>
+
+    <p class="tip">Dica: confira se o link está correto e tente novamente.</p>
+  </main>
+</body>
+</html>

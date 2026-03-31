@@ -1,0 +1,1359 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bilhete Grátis - Encontre Seu Prêmio</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #6B46C1 0%, #4C1D95 100%);
+            transition: background 0.7s ease;
+            min-height: 100vh;
+            padding: 20px;
+            color: #fff;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .banner {
+            text-align: center;
+            margin-bottom: 30px;
+            animation: fadeInDown 0.8s ease;
+        }
+
+        .banner-image {
+            width: 100%;
+            max-width: 500px;
+            height: auto;
+            border-radius: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+
+        .banner h1 {
+            font-size: 2.2em;
+            margin-bottom: 10px;
+            text-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            color: #fbbf24;
+            font-weight: 900;
+        }
+
+        .banner p {
+            font-size: 1.3em;
+            font-weight: 700;
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .card {
+            background: rgba(30, 20, 60, 0.6);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            border: 2px solid rgba(251, 191, 36, 0.3);
+            animation: fadeInUp 0.8s ease;
+        }
+
+        .platform-select {
+            margin-bottom: 25px;
+        }
+
+        .platform-select label {
+            display: block;
+            margin-bottom: 12px;
+            font-weight: 700;
+            font-size: 1.1em;
+            color: #fbbf24;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .platform-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .platform-btn {
+            flex: 1;
+            min-width: 100px;
+            padding: 15px 10px;
+            border: 2px solid rgba(251, 191, 36, 0.4);
+            background: rgba(30, 20, 60, 0.4);
+            color: #fff;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 0.95em;
+            transition: all 0.3s ease;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .platform-btn:hover {
+            background: rgba(30, 20, 60, 0.7);
+            border-color: rgba(251, 191, 36, 0.6);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(251, 191, 36, 0.3);
+        }
+
+        .platform-btn.active {
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            color: #1f2937;
+            border-color: #fbbf24;
+            box-shadow: 0 6px 20px rgba(251, 191, 36, 0.4);
+            font-weight: 900;
+        }
+
+        .search-box {
+            margin-bottom: 20px;
+        }
+
+        .search-box label {
+            display: block;
+            margin-bottom: 12px;
+            font-weight: 700;
+            font-size: 1.1em;
+            color: #fbbf24;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            font-size: 1.1em;
+            transition: all 0.3s ease;
+        }
+
+        .search-input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #fff;
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 20px rgba(255,255,255,0.3);
+        }
+
+        .search-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            color: #1f2937;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.2em;
+            font-weight: 900;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(251, 191, 36, 0.4);
+        }
+
+        .search-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(251, 191, 36, 0.6);
+        }
+
+        .search-btn:active {
+            transform: translateY(0);
+        }
+
+        .search-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* Loading Animation */
+        .loader {
+            display: none;
+            text-align: center;
+            padding: 40px 0;
+        }
+
+        .loader.active {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .loader-orbit {
+            position: relative;
+            width: 80px;
+            height: 80px;
+        }
+
+        .loader-orbit .ring {
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            border: 3px solid transparent;
+        }
+
+        .loader-orbit .ring:nth-child(1) {
+            border-top-color: #fbbf24;
+            border-right-color: #fbbf24;
+            animation: orbit-spin 0.6s cubic-bezier(0.6, 0.2, 0.2, 0.8) infinite;
+        }
+
+        .loader-orbit .ring:nth-child(2) {
+            inset: 8px;
+            border-bottom-color: #a78bfa;
+            border-left-color: #a78bfa;
+            animation: orbit-spin 0.8s cubic-bezier(0.6, 0.2, 0.2, 0.8) infinite reverse;
+        }
+
+        .loader-orbit .ring:nth-child(3) {
+            inset: 16px;
+            border-top-color: #34d399;
+            border-right-color: #34d399;
+            animation: orbit-spin 0.5s cubic-bezier(0.6, 0.2, 0.2, 0.8) infinite;
+        }
+
+        .loader-orbit .core {
+            position: absolute;
+            inset: 24px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #fbbf24 0%, #f59e0b 60%, transparent 70%);
+            animation: core-pulse 0.8s ease-in-out infinite alternate;
+            box-shadow: 0 0 20px rgba(251, 191, 36, 0.6), 0 0 40px rgba(251, 191, 36, 0.3);
+        }
+
+        .loader-progress-wrap {
+            width: 100%;
+            max-width: 280px;
+        }
+
+        .loader-progress-track {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .loader-progress-bar {
+            height: 100%;
+            width: 0%;
+            border-radius: 3px;
+            background: linear-gradient(90deg, #fbbf24, #a78bfa, #34d399, #fbbf24);
+            background-size: 300% 100%;
+            animation: progress-fill 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards,
+                       shimmer 0.8s linear infinite;
+        }
+
+        .loader-progress-track::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: track-shine 1s ease-in-out infinite;
+        }
+
+        .loader-text {
+            font-size: 1em;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.9);
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+        .loader-text .dot-anim {
+            display: inline-block;
+            animation: dot-blink 1s steps(1) infinite;
+        }
+        .loader-text .dot-anim:nth-child(2) { animation-delay: 0.2s; }
+        .loader-text .dot-anim:nth-child(3) { animation-delay: 0.4s; }
+
+        .loader-percent {
+            font-size: 0.85em;
+            color: #fbbf24;
+            font-weight: 700;
+            font-variant-numeric: tabular-nums;
+            min-width: 40px;
+            margin-top: -8px;
+        }
+
+        @keyframes orbit-spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes core-pulse {
+            from { transform: scale(0.85); opacity: 0.7; }
+            to { transform: scale(1.1); opacity: 1; }
+        }
+
+        @keyframes progress-fill {
+            0% { width: 0%; }
+            20% { width: 35%; }
+            50% { width: 60%; }
+            80% { width: 85%; }
+            100% { width: 100%; }
+        }
+
+        @keyframes shimmer {
+            0% { background-position: 0% 0; }
+            100% { background-position: 300% 0; }
+        }
+
+        @keyframes track-shine {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        @keyframes dot-blink {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 1; }
+        }
+
+        /* Results */
+        .results {
+            display: none;
+            margin-top: 30px;
+            padding: 25px;
+            background: rgba(30, 20, 60, 0.6);
+            border-radius: 15px;
+            border: 2px solid rgba(251, 191, 36, 0.4);
+            animation: fadeIn 0.5s ease;
+        }
+
+        .results.active {
+            display: block;
+        }
+
+        .result-item {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(251, 191, 36, 0.3);
+        }
+
+        .result-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .result-label {
+            font-size: 0.9em;
+            opacity: 0.8;
+            margin-bottom: 5px;
+            color: #fbbf24;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .result-value {
+            font-size: 1.3em;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .result-item--ticket {
+            background: linear-gradient(135deg, rgba(251,191,36,0.25), rgba(245,158,11,0.12));
+            border: 2px solid rgba(251,191,36,0.75);
+            border-radius: 12px;
+            padding: 14px;
+            text-align: center;
+            box-shadow: 0 0 0 1px rgba(251,191,36,0.25), 0 8px 20px rgba(0,0,0,0.2);
+        }
+
+        .result-item--ticket .result-label {
+            color: #fbbf24;
+            font-size: 0.92em;
+            font-weight: 900;
+            margin-bottom: 6px;
+            letter-spacing: 0.8px;
+        }
+
+        .result-item--ticket .result-value {
+            color: #fff;
+            font-size: 2em;
+            line-height: 1.1;
+            font-weight: 900;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.35);
+        }
+
+        /* ── Bilhetes Restantes Agente row ─────────────────── */
+        .result-item--remaining {
+            border-radius: 12px;
+            padding: 12px 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(255,255,255,0.06);
+            border: 1.5px solid rgba(255,255,255,0.15);
+        }
+        .result-item--remaining .result-label {
+            font-size: 0.82em;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            color: rgba(255,255,255,0.75);
+        }
+        .result-remaining-value {
+            font-size: 1.45em;
+            font-weight: 900;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .result-remaining-value.rem-ok    { color: #4ade80; }
+        .result-remaining-value.rem-low   { color: #fbbf24; }
+        .result-remaining-value.rem-zero  { color: #f87171; }
+        .result-remaining-value.rem-unknown { color: rgba(255,255,255,0.4); font-size: 1.1em; }
+        .rem-label {
+            font-size: 0.52em;
+            font-weight: 700;
+            opacity: 0.8;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 30px;
+            font-size: 1.1em;
+        }
+
+        .teaser-box {
+            margin-top: 14px;
+            padding: 14px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.22);
+        }
+
+        .teaser-text {
+            font-size: 0.95em;
+            line-height: 1.45;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: #fff;
+        }
+
+        .teaser-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .teaser-btn {
+            display: inline-block;
+            text-decoration: none;
+            text-align: center;
+            padding: 10px 8px;
+            border-radius: 10px;
+            font-size: 0.9em;
+            font-weight: 800;
+            color: #fff;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+            animation: teaser-shake 1.8s ease-in-out infinite;
+        }
+
+        .teaser-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .teaser-btn--telegram {
+            background: linear-gradient(135deg, #0284c7 0%, #2563eb 100%);
+        }
+
+        .teaser-btn--whatsapp {
+            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+            animation-delay: 0.2s;
+        }
+
+        @keyframes teaser-shake {
+            0%, 100% { transform: translateX(0); }
+            3% { transform: translateX(-2px) rotate(-1deg); }
+            6% { transform: translateX(2px) rotate(1deg); }
+            9% { transform: translateX(-1px) rotate(-0.5deg); }
+            12% { transform: translateX(1px) rotate(0.5deg); }
+            15% { transform: translateX(0); }
+        }
+
+        .success-message {
+            display: none;
+            margin-top: 18px;
+            padding: 18px;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            border-radius: 12px;
+            animation: fadeIn 0.5s ease;
+            box-shadow: 0 8px 24px rgba(16, 185, 129, 0.3);
+        }
+
+        .success-message.active {
+            display: block;
+        }
+
+        .success-message h3 {
+            font-size: 1.08em;
+            margin-bottom: 10px;
+            line-height: 1.45;
+        }
+
+        .success-message p {
+            font-size: 0.93em;
+            line-height: 1.45;
+            margin-bottom: 8px;
+        }
+
+        .success-message strong {
+            color: #fbbf24;
+        }
+
+        .success-message ol {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+
+        .success-message li {
+            margin-bottom: 7px;
+            line-height: 1.4;
+        }
+
+        .success-message a {
+            color: #fbbf24;
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        .success-message a:hover {
+            text-decoration: underline;
+        }
+
+        .warning-box {
+            margin-top: 12px;
+            padding: 12px;
+            background: rgba(251, 191, 36, 0.15);
+            border: 2px solid #fbbf24;
+            border-radius: 12px;
+            font-size: 0.9em;
+            line-height: 1.45;
+        }
+
+        .warning-box p {
+            margin-bottom: 7px;
+        }
+
+        .warning-box p:last-child {
+            margin-bottom: 0;
+        }
+
+        .cta-button {
+            display: block;
+            margin: 12px 0 10px 0;
+            padding: 12px 18px;
+            background: linear-gradient(180deg, #ec4899 0%, #7c3aed 100%);
+            color: #1f2937;
+            text-decoration: none;
+            border-radius: 12px;
+            font-size: 1.02em;
+            font-weight: 900;
+            text-align: center;
+            box-shadow: 0 6px 25px rgba(236, 72, 153, 0.5);
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 35px rgba(236, 72, 153, 0.7);
+            background: linear-gradient(180deg, #ec4899 0%, #7c3aed 100%);
+        }
+
+        .cta-button:active {
+            transform: translateY(-1px);
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                box-shadow: 0 6px 25px rgba(251, 191, 36, 0.5);
+            }
+            50% {
+                box-shadow: 0 6px 35px rgba(251, 191, 36, 0.8);
+            }
+        }
+
+        .cta-button {
+            animation: pulse 2s infinite;
+        }
+
+        /* ── Bulk Registration Section ─────────────────────────────── */
+        .bulk-section {
+            display: none;
+            margin-top: 20px;
+            animation: fadeIn 0.5s ease;
+        }
+        .bulk-section.active {
+            display: block;
+        }
+        .bulk-remaining-info {
+            background: rgba(16,185,129,0.1);
+            border: 2px solid rgba(16,185,129,0.45);
+            border-radius: 14px;
+            padding: 18px;
+            text-align: center;
+            margin-bottom: 14px;
+        }
+        .bulk-remaining-label {
+            font-size: 0.8em;
+            color: #6ee7b7;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 6px;
+        }
+        .bulk-remaining-count {
+            font-size: 3em;
+            font-weight: 900;
+            color: #fff;
+            line-height: 1;
+            text-shadow: 0 2px 12px rgba(16,185,129,0.5);
+        }
+        .bulk-remaining-sub {
+            font-size: 0.85em;
+            color: rgba(255,255,255,0.6);
+            margin-top: 4px;
+            font-weight: 600;
+        }
+        .bulk-btn {
+            display: block;
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: #fff;
+            border: none;
+            border-radius: 14px;
+            font-size: 1.15em;
+            font-weight: 900;
+            cursor: pointer;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 6px 24px rgba(16,185,129,0.5);
+            transition: all 0.3s ease;
+            animation: pulse-green 2s infinite;
+        }
+        .bulk-btn:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 32px rgba(16,185,129,0.75);
+        }
+        .bulk-btn:disabled {
+            opacity: 0.65;
+            cursor: not-allowed;
+            animation: none;
+        }
+        @keyframes pulse-green {
+            0%, 100% { box-shadow: 0 6px 24px rgba(16,185,129,0.5); }
+            50%       { box-shadow: 0 6px 36px rgba(16,185,129,0.85); }
+        }
+        .bulk-msg {
+            padding: 16px;
+            border-radius: 12px;
+            text-align: center;
+            font-size: 0.95em;
+            font-weight: 700;
+            line-height: 1.55;
+        }
+        .bulk-msg--none {
+            background: rgba(239,68,68,0.12);
+            border: 2px solid rgba(239,68,68,0.4);
+            color: #fca5a5;
+        }
+        .bulk-msg--low {
+            background: rgba(251,191,36,0.1);
+            border: 2px solid rgba(251,191,36,0.35);
+            color: #fbbf24;
+        }
+        .bulk-msg a {
+            color: #fff;
+            text-decoration: underline;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+            font-size: 0.9em;
+            opacity: 0.8;
+        }
+
+        .footer p {
+            margin-bottom: 8px;
+        }
+
+        .footer a {
+            color: #fbbf24;
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 12px;
+            }
+
+            .container {
+                max-width: 100%;
+            }
+
+            .card {
+                padding: 16px;
+                border-radius: 14px;
+            }
+
+            .banner h1 {
+                font-size: 1.55em;
+                margin-bottom: 6px;
+            }
+
+            .banner p {
+                font-size: 1em;
+            }
+            
+            .platform-btn {
+                font-size: 0.85em;
+                padding: 10px 8px;
+                min-width: 90px;
+            }
+
+            .search-box label,
+            .platform-select label {
+                font-size: 0.92em;
+                margin-bottom: 8px;
+            }
+
+            .search-input {
+                font-size: 1em;
+                padding: 12px 14px;
+            }
+
+            .search-btn {
+                font-size: 1em;
+                padding: 13px;
+            }
+
+            .results {
+                margin-top: 14px;
+                padding: 12px;
+                border-radius: 12px;
+            }
+
+            .result-item {
+                margin-bottom: 10px;
+                padding-bottom: 10px;
+            }
+
+            .result-label {
+                font-size: 0.78em;
+                margin-bottom: 4px;
+            }
+
+            .result-value {
+                font-size: 1.05em;
+            }
+
+            .result-item--ticket {
+                padding: 11px 10px;
+                border-width: 2px;
+                margin: 2px 0 8px;
+            }
+
+            .result-item--ticket .result-label {
+                font-size: 0.8em;
+                margin-bottom: 5px;
+            }
+
+            .result-item--ticket .result-value {
+                font-size: 1.65em;
+                line-height: 1.05;
+            }
+
+            .success-message {
+                margin-top: 12px;
+                padding: 12px;
+                border-radius: 10px;
+            }
+
+            .success-message h3 {
+                font-size: 0.95em;
+                margin-bottom: 8px;
+                line-height: 1.35;
+            }
+
+            .success-message p {
+                font-size: 0.86em;
+                margin-bottom: 6px;
+            }
+
+            .success-message ol {
+                margin: 8px 0;
+                padding-left: 17px;
+            }
+
+            .success-message li {
+                font-size: 0.84em;
+                margin-bottom: 5px;
+                line-height: 1.35;
+            }
+
+            .cta-button {
+                margin: 10px 0 8px 0;
+                padding: 10px 12px;
+                font-size: 0.9em;
+                border-radius: 10px;
+                letter-spacing: 0.3px;
+            }
+
+            .warning-box {
+                margin-top: 9px;
+                padding: 9px;
+                border-radius: 10px;
+                font-size: 0.82em;
+            }
+
+            .footer {
+                margin-top: 16px;
+                padding: 12px 6px;
+                font-size: 0.76em;
+            }
+
+            .teaser-box {
+                margin-top: 10px;
+                padding: 10px;
+                border-radius: 10px;
+            }
+
+            .teaser-text {
+                font-size: 0.84em;
+                margin-bottom: 9px;
+            }
+
+            .teaser-actions {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+
+            .teaser-btn {
+                font-size: 0.84em;
+                padding: 9px 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="banner">
+            <img src="https://i.ibb.co/GQmF9K0Y/image.png" alt="PopSorte Banner" class="banner-image">
+            <h1>Bem-vindo POP AGENTE</h1>
+            <p>Encontre Seu Bilhete Grátis</p>
+        </div>
+
+        <div class="card">
+            <div class="platform-select">
+                <label>Escolha a Plataforma:</label>
+                <div class="platform-buttons">
+                    <button class="platform-btn" data-platform="POPBEA" data-gid="1933711878">POPBEA</button>
+                    <button class="platform-btn" data-platform="POPSUR" data-gid="1599682945">POPSUR</button>
+                    <button class="platform-btn" data-platform="POPZOE" data-gid="0">POPZOE</button>
+                    <button class="platform-btn" data-platform="POPLUZ" data-gid="1663218372">POPLUZ</button>
+                    <button class="platform-btn" data-platform="POPN1" data-gid="754310431">POPN1</button>
+                </div>
+            </div>
+
+            <div class="search-box">
+                <label>Digite Seu ID de Jogo:</label>
+                <input type="text" class="search-input" id="gameId" placeholder="Ex: 123456789">
+            </div>
+
+            <button class="search-btn" id="searchBtn">Buscar Bilhete</button>
+
+            <div class="loader" id="loader">
+                <div class="loader-orbit">
+                    <div class="ring"></div>
+                    <div class="ring"></div>
+                    <div class="ring"></div>
+                    <div class="core"></div>
+                </div>
+                <div class="loader-progress-wrap">
+                    <div class="loader-progress-track">
+                        <div class="loader-progress-bar" id="loaderBar"></div>
+                    </div>
+                </div>
+                <div class="loader-percent" id="loaderPercent">0%</div>
+                <div class="loader-text">Buscando<span class="dot-anim">.</span><span class="dot-anim">.</span><span class="dot-anim">.</span></div>
+            </div>
+
+            <div class="results" id="results"></div>
+
+            <div class="bulk-section" id="bulkSection"></div>
+
+            <div class="success-message" id="successMessage">
+                <h3>🎉 Parabéns! Seu ID foi registrado para receber <span id="ticketCount">0</span> bilhete(s) grátis. Agora você tem a chance de concorrer aos dois prêmios: R$900 e o Jackpot de R$20.000+++ 💰</h3>
+
+                <p><strong>💰 Prêmios e Jackpot</strong></p>
+                <p><strong>Jackpot Principal:</strong> R$20.000+++ para quem acertar os 5 números.</p>
+                <p><strong>Acumulação:</strong> Se ninguém ganhar o prêmio máximo, o valor aumenta em R$ 300,00 por dia.</p>
+                <p><strong>Prêmio Diário Garantido:</strong> Se ninguém acertar os 5 números, o jogador que acertar o maior número (ex.: 4 ou 3 números) ganha R$ 900,00.</p>
+                <p>Em caso de múltiplos vencedores, o prêmio será dividido entre eles.</p>
+                
+                <a href="https://popsorte.vip" target="_blank" class="cta-button">
+                    Trocar e usar bilhete agora
+                </a>
+
+                <p><strong>📌 Como usar</strong></p>
+                <ol>
+                    <li>Retorne aqui para ver quantos bilhetes grátis você tem no dia 👉 <a href="https://PopSorte.vip/agente/" target="_blank">https://PopSorte.vip/agente/</a></li>
+                    <li>Gere os bilhetes conforme a quantidade que você tem 👉 <a href="https://PopSorte.vip/" target="_blank">https://PopSorte.vip/</a></li>
+                    <li>O prazo para envio é até 20:00 (bilhetes não enviados após esse horário serão inválidos)</li>
+                    <li>Confira o resultado às 21:00 no site oficial da loteria Quina</li>
+                </ol>
+
+                <div class="warning-box">
+                    <p><strong>✍️ Nota:</strong> Os bilhetes são calculados com base no total de indicados que você teve no dia anterior.</p>
+                    <p><strong>👉 Exemplo:</strong> Se você trouxer 1 pessoa que deposite hoje, você receberá 3 bilhetes grátis amanhã.</p>
+                    <p><strong>👥 Convide mais amigos para ganhar mais bilhetes grátis (garantido).</strong></p>
+                </div>
+
+                <div class="warning-box">
+                    <p><strong>⚠️ REGRA IMPORTANTE!</strong></p>
+                    <p>Em caso de violação das regras, uso de múltiplas contas, contas falsas ou qualquer atividade suspeita, o bônus e os bilhetes poderão ser cancelados a qualquer momento.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p><strong>QUINA LOTERIA OFICIAL DA POP</strong></p>
+            <p>NINGUÉM SAI DE MÃOS VAZIAS!</p>
+            <a href="https://popbea.com" target="_blank">POPBEA</a> | <a href="https://popsur.com" target="_blank">POPSUR</a> | <a href="https://popzoe.com" target="_blank">POPZOE</a> | <a href="https://popluz.com" target="_blank">POPLUZ</a> | <a href="https://popn1.com" target="_blank">POPN1</a>
+        </div>
+    </div>
+
+    <script>
+        const SHEET_ID = '1iY9CeUKilVSftMYRjeEZ1yvDhw3DdqdD1UfBHCyJF6I'; // Sheet A: daily allocation (updated midnight by team)
+        const TRACKING_SHEET_ID = '1tt2XYr1_PY4MYKRFYEhH3yIZIVvqy_uRI_tjU0uAVpQ'; // Sheet B: remaining tracker
+        const TRACKING_GIDS = { POPN1: '0', POPLUZ: '1439646488', POPZOE: '1494410655', POPSUR: '2068012496', POPBEA: '391959141' };
+        const WORKER_AGENT_URL = 'https://popsorte-agent.danilla-vargas1923.workers.dev';
+        const PLATFORM_BACKGROUNDS = {
+            POPBEA: 'linear-gradient(135deg, #F48CCB 0%, #7A3FD1 100%)',
+            POPZOE: 'linear-gradient(135deg, #2563eb 0%, #facc15 100%)',
+            POPSUR: 'linear-gradient(135deg, #22c55e 0%, #facc15 100%)',
+            POPN1: 'linear-gradient(135deg, #1e3a8a 0%, #0f172a 100%)',
+            POPLUZ: 'linear-gradient(135deg, #ec4899 0%, #7c3aed 100%)'
+        };
+        
+        let selectedPlatform = null;
+        let selectedGid = null;
+        let sheetData = null;
+
+        setupClientProtection();
+
+        function setupClientProtection() {
+            document.addEventListener('contextmenu', function(event) {
+                event.preventDefault();
+            });
+
+            document.addEventListener('keydown', function(event) {
+                const key = event.key.toLowerCase();
+                const blockDevTools =
+                    key === 'f12' ||
+                    (event.ctrlKey && event.shiftKey && ['i', 'j', 'c', 'k'].includes(key)) ||
+                    (event.ctrlKey && ['u', 's'].includes(key));
+
+                if (blockDevTools) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+            }, true);
+        }
+
+        // Platform selection
+        document.querySelectorAll('.platform-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.platform-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                selectedPlatform = this.dataset.platform;
+                selectedGid = this.dataset.gid;
+                applyPlatformBackground(selectedPlatform);
+            });
+        });
+
+        function applyPlatformBackground(platform) {
+            const nextBackground = PLATFORM_BACKGROUNDS[platform];
+            if (!nextBackground) return;
+            document.body.style.background = nextBackground;
+        }
+
+        // Search button
+        document.getElementById('searchBtn').addEventListener('click', searchTicket);
+
+        // Enter key search
+        document.getElementById('gameId').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                searchTicket();
+            }
+        });
+
+        async function searchTicket() {
+            const gameId = document.getElementById('gameId').value.trim();
+            const normalizedGameId = gameId.replace(/\D/g, '');
+            const loader = document.getElementById('loader');
+            const results = document.getElementById('results');
+            const successMessage = document.getElementById('successMessage');
+
+            // Reset
+            results.classList.remove('active');
+            results.innerHTML = '';
+            successMessage.classList.remove('active');
+
+            // Validation
+            if (!selectedPlatform) {
+                alert('Por favor, escolha uma plataforma primeiro!');
+                return;
+            }
+
+            if (!gameId) {
+                alert('Por favor, digite seu ID de Jogo!');
+                return;
+            }
+
+            // Show loader
+            loader.classList.add('active');
+            
+            // Animate progress counter
+            const loaderBar = document.getElementById('loaderBar');
+            const loaderPercent = document.getElementById('loaderPercent');
+            loaderBar.style.animation = 'none';
+            loaderBar.offsetHeight; // reflow
+            loaderBar.style.animation = '';
+            let pct = 0;
+            const pctInterval = setInterval(() => {
+                pct += Math.random() * 12 + 3;
+                if (pct > 95) pct = 95;
+                loaderPercent.textContent = Math.round(pct) + '%';
+            }, 80);
+
+            try {
+                // Fetch data from Google Sheets (using gviz/tq endpoint to avoid CORS)
+                const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&gid=${selectedGid}`;
+                
+                const response = await fetch(url);
+                if (!response.ok) throw new Error('Falha ao carregar dados do Google Sheets');
+                const csvText = await response.text();
+                
+                // Parse CSV
+                const rows = csvText.split('\n').map(row => {
+                    // Simple CSV parser (handles quotes)
+                    const cells = [];
+                    let cell = '';
+                    let inQuotes = false;
+                    
+                    for (let i = 0; i < row.length; i++) {
+                        const char = row[i];
+                        
+                        if (char === '"') {
+                            inQuotes = !inQuotes;
+                        } else if (char === ',' && !inQuotes) {
+                            cells.push(cell.trim());
+                            cell = '';
+                        } else {
+                            cell += char;
+                        }
+                    }
+                    cells.push(cell.trim());
+                    return cells;
+                });
+
+                // Find the ticket in Sheet A (skip header rows)
+                let found = false;
+                let ticketData = null;
+                for (let i = 2; i < rows.length; i++) {
+                    const row = rows[i];
+                    const rowGameId = row[2] ? row[2].trim() : ''; // Column C (ID DE JOGO)
+                    const normalizedRowGameId = rowGameId.replace(/\D/g, '');
+                    
+                    if (rowGameId === gameId || (normalizedGameId && normalizedRowGameId === normalizedGameId)) {
+                        found = true;
+                        ticketData = {
+                            data: row[1] || 'N/D',
+                            gameId: row[2] || 'N/D',
+                            bilheteGratis: row[3] || 'N/D',
+                            membroValido: row[4] || 'N/D'
+                        };
+                        break;
+                    }
+                }
+
+                if (found && ticketData) {
+                    // Fetch remaining count from Sheet B (remaining tracking sheet)
+                    let remaining = null;
+                    try {
+                        const trackingGid = TRACKING_GIDS[selectedPlatform];
+                        if (trackingGid !== undefined) {
+                            const trackingUrl = `https://docs.google.com/spreadsheets/d/${TRACKING_SHEET_ID}/gviz/tq?tqx=out:csv&gid=${trackingGid}`;
+                            const trackingResp = await fetch(trackingUrl);
+                            if (trackingResp.ok) {
+                                const trackingCsv = await trackingResp.text();
+                                // Parse rows: col A = ID DE JOGO, col D (index 3) = REMAINING BILHETE
+                                const trackingRows = trackingCsv.split('\n').map(line => {
+                                    const cells = [];
+                                    let cell = '', inQ = false;
+                                    for (let ci = 0; ci < line.length; ci++) {
+                                        const ch = line[ci];
+                                        if (ch === '"') { inQ = !inQ; }
+                                        else if (ch === ',' && !inQ) { cells.push(cell.trim()); cell = ''; }
+                                        else { cell += ch; }
+                                    }
+                                    cells.push(cell.trim());
+                                    return cells;
+                                });
+                                for (let ti = 1; ti < trackingRows.length; ti++) {
+                                    const tRow = trackingRows[ti];
+                                    const tId = (tRow[0] || '').replace(/\D/g, '');
+                                    if (tId && tId === normalizedGameId) {
+                                        remaining = parseInt((tRow[3] || '').trim(), 10);
+                                        if (isNaN(remaining)) remaining = 0;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    } catch (e) {
+                        console.warn('⚠️ Sheet B lookup failed:', e);
+                    }
+                    displayResult(ticketData, remaining);
+                } else {
+                    displayNoResults();
+                }
+
+            } catch (error) {
+                console.error('Error:', error);
+                results.innerHTML = `
+                    <div class="no-results">
+                        Erro ao buscar dados. Tente novamente.
+                    </div>
+                `;
+                results.classList.add('active');
+            } finally {
+                clearInterval(pctInterval);
+                loaderPercent.textContent = '100%';
+                loaderBar.style.width = '100%';
+                await new Promise(r => setTimeout(r, 200));
+                loader.classList.remove('active');
+            }
+        }
+
+        function displayResult(ticket, remaining) {
+            const results = document.getElementById('results');
+            const successMessage = document.getElementById('successMessage');
+            const bulkSection = document.getElementById('bulkSection');
+            const ticketCountSpan = document.getElementById('ticketCount');
+
+            if (!results || !successMessage) return;
+
+            // Extract ticket count from "BILHETE GRÁTIS" value (Sheet A)
+            let ticketCount = 0;
+            const bilheteValue = String(ticket.bilheteGratis ?? '');
+            const numberMatch = bilheteValue.match(/\d+/);
+            if (numberMatch) ticketCount = parseInt(numberMatch[0]);
+            const ticketDisplay = ticketCount > 0 ? ticketCount : ticket.bilheteGratis;
+
+            results.innerHTML = `
+                <div class="result-item">
+                    <div class="result-label">Plataforma</div>
+                    <div class="result-value">${selectedPlatform}</div>
+                </div>
+                <div class="result-item">
+                    <div class="result-label">Data</div>
+                    <div class="result-value">${ticket.data}</div>
+                </div>
+                <div class="result-item">
+                    <div class="result-label">ID de Jogo</div>
+                    <div class="result-value">${ticket.gameId}</div>
+                </div>
+                <div class="result-item result-item--ticket">
+                    <div class="result-label">🎫 TOTAL BILHETE GRÁTIS HOJE</div>
+                    <div class="result-value">${ticketDisplay}</div>
+                </div>
+                <div class="result-item">
+                    <div class="result-label">Membro Válido</div>
+                    <div class="result-value">${ticket.membroValido}</div>
+                </div>
+                <div class="result-item result-item--remaining">
+                    <div class="result-label">🎟️ BILHETES RESTANTES AGENTE</div>
+                    <div class="result-value result-remaining-value ${remaining === null ? 'rem-unknown' : remaining === 0 ? 'rem-zero' : remaining <= 4 ? 'rem-low' : 'rem-ok'}">
+                        ${remaining === null ? '—' : remaining}
+                        ${remaining !== null ? `<span class="rem-label">${remaining === 0 ? 'esgotado' : remaining <= 4 ? 'poucos restantes' : 'disponível'}</span>` : ''}
+                    </div>
+                </div>
+            `;
+            results.classList.add('active');
+
+            // ── Bulk section logic based on Sheet B remaining count ──────────
+            if (bulkSection) {
+                bulkSection.innerHTML = '';
+                bulkSection.classList.remove('active');
+                successMessage.classList.remove('active');
+                successMessage.style.display = 'none';
+
+                if (remaining === null || remaining === 0) {
+                    bulkSection.innerHTML = `
+                        <div class="bulk-msg bulk-msg--none">
+                            ⚠️ Sem bilhetes de agente disponíveis para registro em massa.<br>
+                            <a href="https://popsorte.vip" target="_blank">Acesse o site normal →</a>
+                        </div>`;
+                    bulkSection.classList.add('active');
+
+                } else if (remaining >= 1 && remaining <= 4) {
+                    bulkSection.innerHTML = `
+                        <div class="bulk-msg bulk-msg--low">
+                            Você tem <strong>${remaining}</strong> bilhete(s) restante(s).<br>
+                            Para poucos bilhetes, use o site normal:
+                            <a href="https://popsorte.vip" target="_blank">popsorte.vip →</a>
+                        </div>`;
+                    bulkSection.classList.add('active');
+                    if (ticketCountSpan) ticketCountSpan.textContent = ticketDisplay;
+                    successMessage.classList.add('active');
+                    successMessage.style.display = 'block';
+
+                } else {
+                    // remaining >= 5 → show REGISTRO EM MASSA button
+                    const gameIdVal = ticket.gameId.replace(/\D/g, '') || ticket.gameId;
+                    bulkSection.innerHTML = `
+                        <div class="bulk-remaining-info">
+                            <div class="bulk-remaining-label">Bilhetes disponíveis para registro em massa</div>
+                            <div class="bulk-remaining-count">${remaining}</div>
+                            <div class="bulk-remaining-sub">bilhetes restantes</div>
+                        </div>
+                        <button class="bulk-btn" id="bulkBtn"
+                            onclick="requestBulkToken('${gameIdVal}', '${selectedPlatform}', ${remaining})">
+                            🚀 REGISTRO EM MASSA
+                        </button>`;
+                    bulkSection.classList.add('active');
+                    if (ticketCountSpan) ticketCountSpan.textContent = ticketDisplay;
+                    successMessage.classList.add('active');
+                    successMessage.style.display = 'block';
+                }
+            } else {
+                // No bulkSection element — legacy fallback
+                if (ticketCountSpan) ticketCountSpan.textContent = ticketDisplay;
+                successMessage.classList.add('active');
+                successMessage.style.display = 'block';
+            }
+        }
+
+        async function requestBulkToken(gameId, platform, remaining) {
+            const btn = document.getElementById('bulkBtn');
+            if (btn) { btn.disabled = true; btn.textContent = '⏳ Gerando acesso...'; }
+
+            try {
+                const resp = await fetch(`${WORKER_AGENT_URL}/api/agent/token/create`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ gameId, platform, remaining }),
+                });
+
+                const data = await resp.json();
+
+                if (!resp.ok) {
+                    alert(data.error || `Erro ${resp.status}. Tente novamente.`);
+                    if (btn) { btn.disabled = false; btn.textContent = '🚀 REGISTRO EM MASSA'; }
+                    return;
+                }
+
+                if (!data.token) throw new Error('Token não recebido do servidor');
+
+                window.location.href = `bulk.html?token=${data.token}`;
+
+            } catch (e) {
+                console.error('requestBulkToken error:', e);
+                if (btn) { btn.disabled = false; btn.textContent = '🚀 REGISTRO EM MASSA'; }
+                alert('Erro ao gerar acesso. Verifique sua conexão e tente novamente.');
+            }
+        }
+
+        function displayNoResults() {
+            const results = document.getElementById('results');
+            results.innerHTML = `
+                <div class="no-results">
+                    Nenhum bilhete encontrado com este ID.<br>
+                    Verifique seu ID e tente novamente.
+
+                    <div class="teaser-box">
+                        <p class="teaser-text">Ops! Não tem bilhete grátis da Quina? Fale com seu mentor agora mesmo.</p>
+                        <div class="teaser-actions">
+                            <a class="teaser-btn teaser-btn--telegram" href="http://pop-agent.com/tg" target="_blank" rel="noopener noreferrer">Telegram</a>
+                            <a class="teaser-btn teaser-btn--whatsapp" href="http://pop-agent.com/wa" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+                        </div>
+                    </div>
+                </div>
+            `;
+            results.classList.add('active');
+        }
+    </script>
+</body>
+</html>

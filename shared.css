@@ -1,0 +1,1790 @@
+    /* ==========================================
+       POPLUZ DESIGN SELECTOR
+       ========================================== */
+    /* Override popluz-section display: none from pop-sorte.css */
+    .popluz-section.popluz-design-container {
+      display: none !important;
+      visibility: hidden !important;
+      min-height: 100vh;
+      width: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      margin: 0;
+      padding: 0;
+      opacity: 0;
+      pointer-events: none;
+    }
+    
+    .popluz-section.popluz-design-container.active {
+      display: block !important;
+      visibility: visible !important;
+      position: relative;
+      opacity: 1;
+      pointer-events: auto;
+    }
+    
+    /* Design Selector Floating Button */
+    .design-selector-fab {
+      position: fixed;
+      bottom: 100px;
+      right: 20px;
+      z-index: 1000;
+      display: none;
+    }
+    
+    .design-selector-fab.visible {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    
+    .design-btn {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      border: 3px solid rgba(255,255,255,0.5);
+      cursor: pointer;
+      font-size: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    }
+    
+    .design-btn:hover {
+      transform: scale(1.1);
+    }
+    
+    .design-btn.active {
+      border-color: #fbbf24;
+      box-shadow: 0 0 20px rgba(251, 191, 36, 0.6);
+    }
+    
+    .design-btn-midnight {
+      background: linear-gradient(135deg, #020617, #1e3a8a);
+      color: #fbbf24;
+    }
+    
+    .design-btn-gala {
+      background: linear-gradient(135deg, #0d0906, #8b6914);
+      color: #f7e7ce;
+    }
+
+    /* ==========================================
+       TEMPLATE 3: MIDNIGHT CASINO STYLES
+       ========================================== */
+    .popluz-midnight {
+      --mc-bg-dark: #020617;
+      --mc-bg-surface: #0f172a;
+      --mc-bg-card: #1e293b;
+      --mc-bg-elevated: #334155;
+      --mc-midnight-bright: #3b82f6;
+      --mc-midnight-primary: #2563eb;
+      --mc-neon-gold: #fbbf24;
+      --mc-neon-gold-bright: #fcd34d;
+      --mc-neon-amber: #f59e0b;
+      --mc-neon-orange: #ea580c;
+      --mc-neon-purple: #a855f7;
+      --mc-neon-pink: #ec4899;
+      --mc-neon-cyan: #22d3ee;
+      --mc-white: #ffffff;
+      --mc-text-dim: #94a3b8;
+      --mc-border-glow: rgba(251, 191, 36, 0.3);
+      --mc-glow-gold: rgba(251, 191, 36, 0.6);
+      --mc-glow-blue: rgba(59, 130, 246, 0.5);
+      --mc-font-display: 'Orbitron', sans-serif;
+      --mc-font-body: 'Outfit', sans-serif;
+      
+      font-family: var(--mc-font-body);
+      background: var(--mc-bg-dark);
+      color: var(--mc-white);
+      min-height: 100vh;
+      width: 100%;
+      overflow-x: hidden;
+      position: relative;
+    }
+    
+    /* Casino Grid Background */
+    .popluz-midnight::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: 
+        linear-gradient(90deg, rgba(59, 130, 246, 0.03) 1px, transparent 1px),
+        linear-gradient(rgba(59, 130, 246, 0.03) 1px, transparent 1px),
+        radial-gradient(ellipse 80% 50% at 20% 30%, rgba(251, 191, 36, 0.08) 0%, transparent 50%),
+        radial-gradient(ellipse 60% 40% at 80% 70%, rgba(168, 85, 247, 0.06) 0%, transparent 50%);
+      background-size: 60px 60px, 60px 60px, 100% 100%, 100% 100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+    
+    /* Floating Casino Sparkles */
+    .popluz-midnight::after {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: 
+        radial-gradient(3px 3px at 100px 100px, #fbbf24, transparent),
+        radial-gradient(2px 2px at 300px 200px, #a855f7, transparent),
+        radial-gradient(3px 3px at 500px 80px, #3b82f6, transparent),
+        radial-gradient(2px 2px at 700px 250px, #fbbf24, transparent),
+        radial-gradient(3px 3px at 900px 150px, #22d3ee, transparent),
+        radial-gradient(2px 2px at 150px 350px, #ec4899, transparent);
+      animation: mc-sparkle 8s ease-in-out infinite alternate;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.8;
+    }
+    
+    @keyframes mc-sparkle {
+      0% { opacity: 0.5; transform: scale(1); }
+      100% { opacity: 0.9; transform: scale(1.02); }
+    }
+    
+    .mc-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 25px;
+      position: relative;
+      z-index: 1;
+    }
+    
+    /* Midnight Casino Header */
+    .mc-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(2, 6, 23, 0.85);
+      backdrop-filter: blur(20px) saturate(180%);
+      border-bottom: 1px solid var(--mc-border-glow);
+      box-shadow: 0 4px 30px rgba(251, 191, 36, 0.1);
+      padding: 15px 0;
+    }
+    
+    .mc-header-content {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    
+    .mc-logo-area {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    
+    .mc-logo-icon {
+      width: 52px;
+      height: 52px;
+      background: linear-gradient(135deg, var(--mc-bg-card) 0%, var(--mc-bg-elevated) 100%);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+      border: 2px solid var(--mc-neon-gold);
+      box-shadow: 0 0 20px var(--mc-glow-gold);
+      animation: mc-neon-pulse 2s ease-in-out infinite;
+    }
+    
+    @keyframes mc-neon-pulse {
+      0%, 100% { box-shadow: 0 0 20px var(--mc-glow-gold); }
+      50% { box-shadow: 0 0 35px var(--mc-glow-gold), 0 0 50px rgba(251, 191, 36, 0.3); }
+    }
+    
+    .mc-logo-text h1 {
+      font-family: var(--mc-font-display);
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: 0.15em;
+      color: var(--mc-neon-gold);
+      text-shadow: 0 0 20px var(--mc-glow-gold);
+    }
+    
+    .mc-logo-text p {
+      font-size: 10px;
+      color: var(--mc-midnight-bright);
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      margin-top: 3px;
+      text-shadow: 0 0 10px var(--mc-glow-blue);
+    }
+    
+    .mc-nav {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    
+    .mc-nav a {
+      color: var(--mc-text-dim);
+      text-decoration: none;
+      font-size: 12px;
+      font-weight: 500;
+      padding: 10px 18px;
+      border-radius: 10px;
+      transition: 0.2s ease;
+      border: 1px solid transparent;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .mc-nav a::before {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      width: 0;
+      height: 2px;
+      background: var(--mc-neon-gold);
+      transition: 0.2s ease;
+      transform: translateX(-50%);
+    }
+    
+    .mc-nav a:hover {
+      color: var(--mc-neon-gold);
+      background: rgba(251, 191, 36, 0.05);
+    }
+    
+    .mc-nav a:hover::before {
+      width: 60%;
+    }
+    
+    /* Midnight Casino Hero */
+    .mc-hero {
+      position: relative;
+      padding: 30px 0 25px;
+      min-height: auto;
+      display: flex;
+      align-items: flex-start;
+    }
+    
+    .mc-hero-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.1fr;
+      gap: 30px;
+      align-items: flex-start;
+    }
+    
+    .mc-hero-content {
+      text-align: left;
+    }
+    
+    /* Casino VIP Badge */
+    .mc-casino-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 20px;
+      background: linear-gradient(135deg, rgba(251, 191, 36, 0.1) 0%, rgba(168, 85, 247, 0.1) 100%);
+      border: 1px solid var(--mc-border-glow);
+      border-radius: 50px;
+      margin-bottom: 15px;
+      box-shadow: 0 0 30px rgba(251, 191, 36, 0.15);
+    }
+    
+    .mc-badge-chips {
+      display: flex;
+      gap: 4px;
+    }
+    
+    .mc-chip {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 700;
+      border: 2px dashed;
+      animation: mc-chip-spin 3s linear infinite;
+    }
+    
+    .mc-chip-gold {
+      background: var(--mc-neon-gold);
+      border-color: var(--mc-neon-orange);
+      color: var(--mc-bg-dark);
+    }
+    
+    .mc-chip-purple {
+      background: var(--mc-neon-purple);
+      border-color: var(--mc-neon-pink);
+      color: var(--mc-white);
+      animation-delay: 0.5s;
+    }
+    
+    .mc-chip-blue {
+      background: var(--mc-midnight-bright);
+      border-color: var(--mc-neon-cyan);
+      color: var(--mc-white);
+      animation-delay: 1s;
+    }
+    
+    @keyframes mc-chip-spin {
+      0%, 100% { transform: rotateY(0deg); }
+      50% { transform: rotateY(180deg); }
+    }
+    
+    .mc-badge-text {
+      font-family: var(--mc-font-display);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      color: var(--mc-neon-gold);
+    }
+    
+    .mc-badge-live {
+      padding: 4px 10px;
+      background: linear-gradient(135deg, var(--mc-neon-gold), var(--mc-neon-orange));
+      border-radius: 20px;
+      font-size: 9px;
+      font-weight: 700;
+      color: var(--mc-bg-dark);
+      animation: mc-live-blink 1s infinite;
+    }
+    
+    @keyframes mc-live-blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+    
+    .mc-hero-title {
+      font-family: var(--mc-font-display);
+      font-size: clamp(28px, 4vw, 42px);
+      font-weight: 900;
+      line-height: 1.15;
+      margin-bottom: 15px;
+    }
+    
+    .mc-title-line {
+      display: inline;
+    }
+    
+    .mc-title-neon {
+      background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 25%, #d97706 50%, #fbbf24 75%, #fcd34d 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      background-size: 200% 100%;
+      animation: mc-golden-shine 3s ease-in-out infinite;
+      text-shadow: none;
+      filter: drop-shadow(0 0 8px rgba(251, 191, 36, 0.6)) drop-shadow(0 0 15px rgba(251, 191, 36, 0.4));
+    }
+    
+    @keyframes mc-golden-shine {
+      0%, 100% { background-position: 0% 50%; filter: drop-shadow(0 0 8px rgba(251, 191, 36, 0.6)) drop-shadow(0 0 15px rgba(251, 191, 36, 0.4)); }
+      50% { background-position: 100% 50%; filter: drop-shadow(0 0 12px rgba(251, 191, 36, 0.8)) drop-shadow(0 0 20px rgba(251, 191, 36, 0.6)); }
+    }
+    
+    .mc-title-gradient {
+      background: linear-gradient(90deg, #3b82f6 0%, #a855f7 50%, #22d3ee 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      background-size: 200% 100%;
+      animation: mc-gradient-shift 4s ease infinite;
+    }
+    
+    @keyframes mc-gradient-shift {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+    
+    .mc-hero-description {
+      font-size: 14px;
+      color: var(--mc-text-dim);
+      line-height: 1.7;
+      margin-bottom: 20px;
+      max-width: 500px;
+      padding-left: 15px;
+      border-left: 3px solid var(--mc-neon-gold);
+    }
+    
+    .mc-cta-group {
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+    
+    .mc-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 16px 32px;
+      border-radius: 12px;
+      font-family: var(--mc-font-body);
+      font-weight: 700;
+      font-size: 14px;
+      text-decoration: none;
+      cursor: pointer;
+      border: none;
+      transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .mc-btn-neon {
+      background: linear-gradient(135deg, var(--mc-neon-gold) 0%, var(--mc-neon-orange) 100%);
+      color: var(--mc-bg-dark);
+      box-shadow: 0 0 20px var(--mc-glow-gold), 0 8px 30px rgba(251, 191, 36, 0.4);
+    }
+    
+    .mc-btn-neon::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+      transition: 0.5s;
+    }
+    
+    .mc-btn-neon:hover {
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 0 40px var(--mc-glow-gold), 0 15px 40px rgba(251, 191, 36, 0.5);
+    }
+    
+    .mc-btn-neon:hover::before {
+      left: 100%;
+    }
+    
+    .mc-btn-cyber {
+      background: transparent;
+      color: var(--mc-midnight-bright);
+      border: 2px solid var(--mc-midnight-bright);
+      box-shadow: 0 0 15px var(--mc-glow-blue);
+    }
+    
+    .mc-btn-cyber:hover {
+      background: rgba(59, 130, 246, 0.1);
+      color: var(--mc-neon-cyan);
+      border-color: var(--mc-neon-cyan);
+      transform: translateY(-2px);
+      box-shadow: 0 0 25px var(--mc-glow-blue), 0 10px 25px rgba(59, 130, 246, 0.3);
+    }
+    
+    /* Preview Card - Holographic */
+    .mc-preview-card {
+      background: linear-gradient(145deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.9) 100%);
+      border: 1px solid var(--mc-border-glow);
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: 0 25px 80px rgba(0, 0, 0, 0.5), 0 0 60px rgba(251, 191, 36, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      animation: mc-hologram-float 6s ease-in-out infinite;
+      position: relative;
+    }
+    
+    .mc-preview-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, transparent 40%, rgba(251, 191, 36, 0.05) 50%, transparent 60%);
+      animation: mc-hologram-shine 4s ease-in-out infinite;
+      pointer-events: none;
+    }
+    
+    @keyframes mc-hologram-float {
+      0%, 100% { transform: translateY(0) rotateX(0deg); }
+      50% { transform: translateY(-12px) rotateX(2deg); }
+    }
+    
+    @keyframes mc-hologram-shine {
+      0%, 100% { opacity: 0; transform: translateX(-100%); }
+      50% { opacity: 1; transform: translateX(100%); }
+    }
+    
+    .mc-preview-header {
+      padding: 15px 18px;
+      border-bottom: 1px solid var(--mc-border-glow);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(251, 191, 36, 0.03);
+    }
+    
+    .mc-preview-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    
+    .mc-preview-title h3 {
+      font-family: var(--mc-font-display);
+      font-size: 12px;
+      letter-spacing: 0.2em;
+      color: var(--mc-neon-gold);
+      text-shadow: 0 0 10px var(--mc-glow-gold);
+    }
+    
+    .mc-cards-icon {
+      font-size: 18px;
+    }
+    
+    .mc-preview-img {
+      padding: 24px;
+      background: radial-gradient(circle at 50% 0%, rgba(251, 191, 36, 0.05) 0%, transparent 50%);
+    }
+    
+    .mc-preview-img img {
+      width: 100%;
+      border-radius: 16px;
+      border: 1px solid var(--mc-border-glow);
+      box-shadow: 0 15px 50px rgba(0, 0, 0, 0.4), 0 0 30px rgba(251, 191, 36, 0.1);
+      transition: 0.4s ease;
+    }
+    
+    .mc-preview-img img:hover {
+      transform: scale(1.02);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 50px rgba(251, 191, 36, 0.2);
+    }
+    
+    /* Slider Container for Midnight Casino */
+    .mc-slider-container {
+      position: relative;
+      width: 100%;
+      padding: 18px;
+    }
+    
+    .mc-slider-viewport {
+      overflow: hidden;
+      border-radius: 16px;
+      position: relative;
+    }
+    
+    .mc-slider-wrapper {
+      display: flex;
+      transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .mc-slide {
+      min-width: 100%;
+      flex: 0 0 100%;
+    }
+    
+    .mc-slide img {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 16px;
+      border: 1px solid var(--mc-border-glow);
+      box-shadow: 0 15px 50px rgba(0, 0, 0, 0.4);
+    }
+    
+    .mc-dots {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 16px;
+      position: relative;
+      z-index: 10;
+    }
+    
+    .mc-dots .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(251, 191, 36, 0.3);
+      cursor: pointer;
+      transition: 0.3s ease;
+    }
+    
+    .mc-dots .dot:hover {
+      background: rgba(251, 191, 36, 0.6);
+    }
+    
+    .mc-dots .dot.active {
+      background: var(--mc-neon-gold);
+      width: 28px;
+      border-radius: 5px;
+      box-shadow: 0 0 15px var(--mc-glow-gold);
+    }
+    
+    /* Midnight Casino Footer */
+    .mc-footer {
+      padding: 30px 0;
+      border-top: 1px solid var(--mc-border-glow);
+      text-align: center;
+      background: linear-gradient(180deg, transparent, rgba(251, 191, 36, 0.02));
+      margin-top: 30px;
+    }
+    
+    @media (max-width: 768px) {
+      .mc-footer {
+        padding: 20px 0;
+        margin-top: 20px;
+      }
+      
+      .mc-footer-logo {
+        font-size: 18px;
+      }
+      
+      .mc-footer p {
+        font-size: 13px;
+      }
+    }
+    
+    .mc-footer-logo {
+      font-family: var(--mc-font-display);
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--mc-neon-gold);
+      margin-bottom: 10px;
+      text-shadow: 0 0 20px var(--mc-glow-gold);
+    }
+    
+    .mc-footer p {
+      color: var(--mc-text-dim);
+      font-size: 12px;
+    }
+    
+    .mc-footer-warning {
+      margin-top: 10px;
+      font-size: 11px;
+      color: #64748b;
+    }
+    
+    /* Benefits Section Midnight */
+    .mc-benefits {
+      margin-top: 20px;
+      padding: 20px;
+      background: rgba(15, 23, 42, 0.8);
+      border-radius: 16px;
+      border: 1px solid var(--mc-border-glow);
+    }
+    
+    .mc-benefits h3 {
+      font-family: var(--mc-font-display);
+      font-size: 15px;
+      color: var(--mc-neon-gold);
+      margin-bottom: 12px;
+      text-align: left;
+      text-shadow: 0 0 15px var(--mc-glow-gold);
+    }
+    
+    .mc-benefit-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(251, 191, 36, 0.1);
+    }
+    
+    .mc-benefit-item:last-child {
+      border-bottom: none;
+    }
+    
+    .mc-benefit-icon {
+      font-size: 18px;
+      width: 24px;
+      flex-shrink: 0;
+    }
+    
+    .mc-benefit-item span:last-child {
+      color: var(--mc-text-dim);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+    
+    /* Contact Buttons Midnight */
+    .mc-contacts {
+      margin-top: 30px;
+      text-align: center;
+    }
+    
+    .mc-contacts h4 {
+      font-family: var(--mc-font-display);
+      font-size: 14px;
+      color: var(--mc-neon-gold);
+      margin-bottom: 15px;
+    }
+    
+    .mc-contact-buttons {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    
+    .mc-contact-btn {
+      padding: 12px 24px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 13px;
+      text-decoration: none;
+      transition: 0.3s ease;
+    }
+    
+    .mc-contact-btn.telegram {
+      background: linear-gradient(135deg, #0088cc, #006699);
+      color: white;
+      box-shadow: 0 0 15px rgba(0, 136, 204, 0.4);
+    }
+    
+    .mc-contact-btn.whatsapp {
+      background: linear-gradient(135deg, #25d366, #128c7e);
+      color: white;
+      box-shadow: 0 0 15px rgba(37, 211, 102, 0.4);
+    }
+    
+    .mc-contact-btn:hover {
+      transform: translateY(-2px);
+    }
+
+    /* ==========================================
+       TEMPLATE 4: GOLDEN GALA STYLES
+       ========================================== */
+    .popluz-gala {
+      --gg-bg-dark: #ffffff;
+      --gg-bg-surface: #f8fafc;
+      --gg-bg-card: #ffffff;
+      --gg-bg-elevated: #f3f4f6;
+      --gg-champagne-bright: #b45309;
+      --gg-champagne-primary: #d97706;
+      --gg-champagne-rich: #b45309;
+      --gg-champagne-dark: #78350f;
+      --gg-warm-red: #dc2626;
+      --gg-warm-orange: #ea580c;
+      --gg-warm-pink: #db2777;
+      --gg-warm-burgundy: #991b1b;
+      --gg-ivory: #111827;
+      --gg-cream: #1f2937;
+      --gg-white: #ffffff;
+      --gg-text-dim: #4b5563;
+      --gg-text-muted: #6b7280;
+      --gg-border-gold: rgba(180, 83, 9, 0.2);
+      --gg-glow-gold: rgba(217, 119, 6, 0.3);
+      --gg-font-display: 'Space Grotesk', sans-serif;
+      --gg-font-body: 'Inter', sans-serif;
+      
+      font-family: var(--gg-font-body);
+      background: var(--gg-bg-dark);
+      color: var(--gg-ivory);
+      min-height: 100vh;
+      width: 100%;
+      overflow-x: hidden;
+      position: relative;
+      padding-top: 0px;
+    }
+    
+    /* Celebration Background */
+    .popluz-gala::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: 
+        radial-gradient(ellipse 120% 80% at 10% 20%, rgba(212, 168, 83, 0.12) 0%, transparent 50%),
+        radial-gradient(ellipse 100% 100% at 90% 80%, rgba(230, 126, 34, 0.08) 0%, transparent 50%),
+        radial-gradient(ellipse 80% 60% at 50% 50%, rgba(201, 48, 44, 0.05) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    
+    /* Confetti Particles */
+    .popluz-gala::after {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: 
+        radial-gradient(4px 4px at 50px 100px, #f7e7ce, transparent),
+        radial-gradient(3px 3px at 150px 200px, #c9302c, transparent),
+        radial-gradient(4px 4px at 300px 80px, #e6c88d, transparent),
+        radial-gradient(3px 3px at 450px 250px, #d63384, transparent),
+        radial-gradient(4px 4px at 600px 120px, #d4a853, transparent),
+        radial-gradient(3px 3px at 750px 300px, #e67e22, transparent);
+      animation: gg-confetti-fall 12s linear infinite;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.7;
+    }
+    
+    @keyframes gg-confetti-fall {
+      0% { transform: translateY(-10vh) rotate(0deg); }
+      100% { transform: translateY(110vh) rotate(360deg); }
+    }
+    
+    .gg-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 25px;
+      position: relative;
+      z-index: 1;
+      border-radius: 8px;
+    }
+    
+    /* Golden Gala Header */
+    .gg-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(20px) saturate(180%);
+      border-bottom: 1px solid var(--gg-border-gold);
+      padding: 10px 0;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+      border-radius: 8px;
+    }
+    
+    .gg-header-content {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding-top: 12px;
+    }
+    
+    .gg-logo-area {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    
+    .gg-logo-icon {
+      width: 55px;
+      height: 55px;
+      background: linear-gradient(135deg, var(--gg-champagne-bright) 0%, var(--gg-champagne-dark) 100%);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      box-shadow: 0 8px 25px var(--gg-glow-gold), inset 0 2px 0 rgba(255, 255, 255, 0.4);
+      animation: gg-gift-bounce 3s ease-in-out infinite;
+      position: relative;
+    }
+    
+    @keyframes gg-gift-bounce {
+      0%, 100% { transform: translateY(0) rotate(-3deg); }
+      50% { transform: translateY(-5px) rotate(3deg); }
+    }
+    
+    .gg-logo-icon::before {
+      content: '';
+      position: absolute;
+      top: -5px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 20px;
+      height: 10px;
+      background: linear-gradient(135deg, var(--gg-warm-red), var(--gg-warm-burgundy));
+      border-radius: 5px 5px 0 0;
+    }
+    
+    .gg-logo-text h1 {
+      font-family: var(--gg-font-display);
+      font-size: 24px;
+      font-weight: 700;
+      font-style: italic;
+      background: linear-gradient(180deg, var(--gg-champagne-bright) 0%, var(--gg-champagne-rich) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .gg-logo-text p {
+      font-size: 10px;
+      color: var(--gg-champagne-primary);
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      margin-top: 3px;
+    }
+    
+    .gg-nav {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+    
+    .gg-nav a {
+      color: var(--gg-text-dim);
+      text-decoration: none;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 8px 14px;
+      border-radius: 20px;
+      transition: 0.2s ease;
+      border: 2px solid rgba(212, 168, 83, 0.3);
+      background: rgba(212, 168, 83, 0.05);
+    }
+    
+    .gg-nav a:hover {
+      color: var(--gg-champagne-bright);
+      background: rgba(212, 168, 83, 0.15);
+      border-color: rgba(230, 200, 141, 0.5);
+    }
+    
+    /* Golden Gala Hero */
+    .gg-hero {
+      position: relative;
+      padding: 30px 0 25px;
+      min-height: auto;
+      display: flex;
+      align-items: flex-start;
+    }
+    
+    .gg-hero-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap: 30px;
+      align-items: flex-start;
+    }
+    
+    .gg-hero-content {
+      text-align: left;
+    }
+    
+    /* Gala Badge */
+    .gg-gala-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 20px;
+      background: linear-gradient(135deg, rgba(212, 168, 83, 0.15) 0%, rgba(201, 48, 44, 0.1) 100%);
+      border: 2px solid var(--gg-border-gold);
+      border-radius: 50px;
+      margin-bottom: 15px;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .gg-gala-badge::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 200%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      animation: gg-shine-sweep 3s infinite;
+    }
+    
+    @keyframes gg-shine-sweep {
+      0% { left: -100%; }
+      100% { left: 100%; }
+    }
+    
+    .gg-badge-balloons {
+      display: flex;
+      gap: 3px;
+    }
+    
+    .gg-balloon {
+      font-size: 16px;
+      animation: gg-balloon-float 2s ease-in-out infinite;
+    }
+    
+    .gg-balloon:nth-child(1) { animation-delay: 0s; }
+    .gg-balloon:nth-child(2) { animation-delay: 0.3s; }
+    .gg-balloon:nth-child(3) { animation-delay: 0.6s; }
+    
+    @keyframes gg-balloon-float {
+      0%, 100% { transform: translateY(0) rotate(-5deg); }
+      50% { transform: translateY(-5px) rotate(5deg); }
+    }
+    
+    .gg-badge-text {
+      font-family: var(--gg-font-display);
+      font-size: 12px;
+      font-weight: 600;
+      font-style: italic;
+      letter-spacing: 0.15em;
+      color: var(--gg-champagne-bright);
+    }
+    
+    .gg-badge-ribbon {
+      background: linear-gradient(135deg, var(--gg-warm-red), var(--gg-warm-burgundy));
+      padding: 4px 12px;
+      border-radius: 15px;
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--gg-white);
+      box-shadow: 0 3px 10px rgba(201, 48, 44, 0.4);
+    }
+    
+    .gg-hero-title {
+      font-family: var(--gg-font-display);
+      font-size: clamp(28px, 4vw, 42px);
+      font-weight: 800;
+      line-height: 1.1;
+      margin-bottom: 8px;
+    }
+    
+    .gg-title-line {
+      display: inline;
+    }
+    
+    .gg-title-elegant {
+      color: #0051ff;
+      font-style: normal;
+      text-shadow: none;
+      font-weight: 900;
+    }
+    
+    .gg-title-warm {
+      background: linear-gradient(135deg, #d4a853 0%, #e67e22 50%, #c9302c 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .gg-hero-description {
+      font-size: 16px;
+      color: var(--gg-text-dim);
+      line-height: 1.8;
+      margin-bottom: 20px;
+      max-width: 520px;
+      position: relative;
+      padding-left: 15px;
+    }
+    
+    .gg-hero-description::before {
+      content: '"';
+      position: absolute;
+      left: 0;
+      top: -10px;
+      font-family: var(--gg-font-display);
+      font-size: 50px;
+      color: var(--gg-champagne-rich);
+      opacity: 0.5;
+      line-height: 1;
+    }
+    
+    .gg-cta-group {
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+    
+    .gg-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 16px 32px;
+      border-radius: 50px;
+      font-family: var(--gg-font-body);
+      font-weight: 700;
+      font-size: 14px;
+      text-decoration: none;
+      cursor: pointer;
+      border: none;
+      transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .gg-btn-gala {
+      background: #4c1d95;
+      color: #ffffff;
+      padding: 18px 36px;
+      font-size: 15px;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.4), inset 0 -2px 4px rgba(0,0,0,0.4), inset 0 2px 4px rgba(255,255,255,0.06);
+      animation: countdownColors 5s linear infinite;
+    }
+    
+    .gg-btn-gala:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.5), inset 0 -2px 4px rgba(0,0,0,0.4), inset 0 2px 4px rgba(255,255,255,0.06);
+    }
+    
+    @keyframes countdownColors {
+      0%   { background: #4c1d95; }
+      20%  { background: #7c3aed; }
+      40%  { background: #c026d3; }
+      60%  { background: #e11d48; }
+      80%  { background: #d97706; }
+      100% { background: #4c1d95; }
+    }
+    
+    .gg-btn-gala::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+      transition: 0.6s;
+    }
+    
+    .gg-btn-gala:hover {
+      transform: translateY(-4px) scale(1.02);
+      box-shadow: 0 15px 45px var(--gg-glow-gold), 0 0 40px rgba(212, 168, 83, 0.4);
+    }
+    
+    .gg-btn-gala:hover::before {
+      left: 100%;
+    }
+    
+    .gg-btn-festive {
+      background: transparent;
+      color: var(--gg-champagne-dark);
+      border: 3px solid var(--gg-champagne-primary);
+      padding: 18px 36px;
+      font-size: 15px;
+      box-shadow: 0 4px 12px rgba(217, 119, 6, 0.25);
+    }
+    
+    .gg-btn-festive:hover {
+      background: rgba(217, 119, 6, 0.15);
+      border-color: var(--gg-champagne-rich);
+      color: var(--gg-champagne-rich);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 24px rgba(217, 119, 6, 0.4);
+    }
+    
+    /* Preview Card - Gift Box Style */
+    .gg-preview-card {
+      background: linear-gradient(180deg, #facc15 0%, #ca8a04 100%);
+      border: none;
+      border-radius: 8px;
+      overflow: visible;
+      box-shadow: none;
+      position: relative;
+      order: -1;
+      isolation: isolate;
+      z-index: 0;
+    }
+    
+    /* Animated border like info-banner */
+    .gg-preview-card::before {
+      content: "";
+      position: absolute;
+      inset: -2px;
+      border-radius: 10px;
+      padding: 3px;
+      background: linear-gradient(
+        90deg,
+        #facc15 0%,
+        #d97706 25%,
+        #4c1d95 50%,
+        #312e81 75%,
+        #facc15 100%
+      );
+      background-size: 300% 300%;
+      animation: gg-bannerBorderFlow 6s linear infinite;
+      z-index: -1;
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      mask-composite: exclude;
+    }
+    
+    @keyframes gg-bannerBorderFlow {
+      0%   { background-position: 0% 50%; }
+      100% { background-position: 300% 50%; }
+    }
+    
+    .gg-preview-card::after {
+      display: none;
+    }
+    
+    @keyframes gg-gift-card-float {
+      0%, 100% { transform: translateY(0) rotate(-0.5deg); }
+      50% { transform: translateY(-12px) rotate(0.5deg); }
+    }
+    
+    .gg-preview-header {
+      padding: 15px 18px;
+      border-bottom: 2px solid var(--gg-border-gold);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(180deg, rgba(217, 119, 6, 0.05) 0%, transparent 100%);
+      position: relative;
+      z-index: 5;
+      border-radius: 8px 8px 0 0;
+    }
+    
+    .gg-preview-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-radius: 8px;
+    }
+    
+    .gg-preview-title h3 {
+      font-family: var(--gg-font-display);
+      font-size: 20px;
+      font-style: normal;
+      letter-spacing: 0.1em;
+      color: white;
+      text-align: center;
+    }
+    
+    .gg-gift-icon {
+      font-size: 24px;
+      animation: gg-gift-shake 2s ease-in-out infinite;
+    }
+    
+    @keyframes gg-gift-shake {
+      0%, 100% { transform: rotate(-5deg); }
+      50% { transform: rotate(5deg); }
+    }
+    
+    .gg-preview-img {
+      padding: 28px;
+      background: radial-gradient(circle at 50% 100%, rgba(212, 168, 83, 0.08) 0%, transparent 60%);
+      position: relative;
+      z-index: 2;
+    }
+    
+    .gg-preview-img img {
+      width: 100%;
+      border-radius: 20px;
+      border: 3px solid var(--gg-champagne-rich);
+      box-shadow: 0 15px 50px rgba(0, 0, 0, 0.4), 0 0 30px rgba(212, 168, 83, 0.15);
+      transition: 0.4s ease;
+    }
+
+    
+    /* Slider Container for Golden Gala */
+    .gg-slider-container {
+      position: relative;
+      width: 100%;
+      padding: 20px;
+      z-index: 2;
+      background: #ffffff;
+      border-radius: 8px;
+    }
+    
+    .gg-slider-viewport {
+      overflow: hidden;
+      border-radius: 20px;
+      position: relative;
+    }
+    
+    .gg-slider-wrapper {
+      display: flex;
+      transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .gg-slide {
+      min-width: 100%;
+      flex: 0 0 100%;
+    }
+    
+    .gg-slide img {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 20px;
+      border: none;
+      box-shadow: none;
+    }
+    
+    .gg-dots {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 16px;
+      position: relative;
+      z-index: 10;
+    }
+    
+    .gg-dots .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(212, 168, 83, 0.3);
+      cursor: pointer;
+      transition: 0.3s ease;
+    }
+    
+    .gg-dots .dot:hover {
+      background: rgba(212, 168, 83, 0.6);
+    }
+    
+    .gg-dots .dot.active {
+      background: var(--gg-champagne-bright);
+      width: 28px;
+      border-radius: 5px;
+      box-shadow: 0 0 15px var(--gg-glow-gold);
+    }
+    
+    /* Golden Gala Footer */
+    .gg-footer {
+      padding: 30px 0;
+      border-top: 2px solid var(--gg-border-gold);
+      text-align: center;
+      background: linear-gradient(180deg, transparent, rgba(212, 168, 83, 0.03));
+      position: relative;
+      margin-top: 30px;
+    }
+    
+    @media (max-width: 768px) {
+      .gg-footer {
+        padding: 20px 0;
+        margin-top: 20px;
+      }
+      
+      .gg-footer-logo {
+        font-size: 20px;
+      }
+      
+      .gg-footer p {
+        font-size: 13px;
+      }
+    }
+    
+    .gg-footer::before {
+      content: '??';
+      position: absolute;
+      top: -15px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 30px;
+    }
+    
+    .gg-footer-logo {
+      font-family: var(--gg-font-display);
+      font-size: 22px;
+      font-weight: 700;
+      font-style: italic;
+      color: var(--gg-champagne-bright);
+      margin-bottom: 10px;
+      text-shadow: 0 0 20px var(--gg-glow-gold);
+    }
+    
+    .gg-footer p {
+      color: var(--gg-text-dim);
+      font-size: 13px;
+    }
+    
+    .gg-footer-warning {
+      margin-top: 10px;
+      font-size: 11px;
+      color: var(--gg-text-muted);
+    }
+    
+    /* Benefits Section Gala */
+    .gg-benefits {
+      margin-top: 20px;
+      padding: 20px;
+      background: rgba(26, 17, 10, 0.8);
+      border-radius: 20px;
+      border: 2px solid var(--gg-border-gold);
+    }
+    
+    .gg-benefits h3 {
+      font-family: var(--gg-font-display);
+      font-size: 15px;
+      font-style: normal;
+      color: #fbbf24;
+      margin-bottom: 12px;
+      text-align: left;
+      text-shadow: 0 0 15px var(--gg-glow-gold);
+    }
+    
+    .gg-benefit-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(251, 191, 36, 0.3);
+    }
+    
+    .gg-benefit-item:last-child {
+      border-bottom: none;
+    }
+    
+    .gg-benefit-icon {
+      font-size: 28px;
+      width: 28px;
+      flex-shrink: 0;
+    }
+    
+    .gg-benefit-item span:last-child {
+      color: #f1f5f9;
+      font-size: 16px;
+      line-height: 1.5;
+    }
+    
+    /* Contact Buttons Gala */
+    .gg-contacts {
+      margin-top: 30px;
+      text-align: center;
+    }
+    
+    .gg-contacts h4 {
+      font-family: var(--gg-font-display);
+      font-size: clamp(28px, 4vw, 42px);
+      font-style: normal;
+      font-weight: 900;
+      color: #fbbf24;
+      background: linear-gradient(180deg, #fbbf24 0%, #f59e0b 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-shadow: none;
+      margin-bottom: 15px;
+      text-align: center;
+      line-height: 1.1;
+    }
+    
+    .gg-contact-buttons {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    
+    .gg-contact-btn {
+      padding: 16px 32px;
+      border-radius: 25px;
+      font-weight: 700;
+      font-size: 15px;
+      text-decoration: none;
+      transition: 0.3s ease;
+      cursor: pointer;
+      min-width: 140px;
+    }
+    
+    .gg-contact-btn.telegram {
+      background: #0088cc;
+      color: white;
+      box-shadow: 0 4px 12px rgba(0, 136, 204, 0.4);
+    }
+    
+    .gg-contact-btn.whatsapp {
+      background: linear-gradient(90deg, #25d366 0%, #20ba5a 100%);
+      color: white;
+      box-shadow: 0 4px 12px rgba(37, 211, 102, 0.4);
+    }
+    
+    .gg-contact-btn:hover {
+      transform: translateY(-3px);
+    }
+    
+    .gg-contact-btn.telegram:hover {
+      box-shadow: 0 6px 16px rgba(0, 136, 204, 0.6);
+      background: #0099dd;
+    }
+    
+    .gg-contact-btn.whatsapp:hover {
+      box-shadow: 0 6px 16px rgba(37, 211, 102, 0.6);
+      background: linear-gradient(90deg, #2ee574 0%, #25d366 100%);
+    }
+
+    /* Mobile-only nav - hidden on desktop */
+    .gg-mobile-nav {
+      display: none;
+    }
+    
+    /* ==========================================
+       RESPONSIVE DESIGN FOR BOTH THEMES
+       ========================================== */
+    @media (max-width: 968px) {
+      /* Hide header nav on mobile/tablet */
+      .gg-header {
+        display: none;
+      }
+      
+      /* Show mobile nav on mobile/tablet */
+      .gg-mobile-nav {
+        display: flex;
+        justify-content: center;
+        gap: 6px;
+        padding: 0px 0px;
+        width: 100%;
+      }
+      
+      .gg-mobile-nav a {
+        color: var(--gg-text-dim);
+        text-decoration: none;
+        font-size: 11px;
+        font-weight: 600;
+        padding: 8px 14px;
+        border-radius: 20px;
+        transition: 0.2s ease;
+        border: 2px solid rgba(212, 168, 83, 0.3);
+        background: rgba(212, 168, 83, 0.05);
+        margin-bottom: 8px;
+      }
+      
+      .gg-mobile-nav a:hover {
+        color: var(--gg-champagne-bright);
+        background: rgba(212, 168, 83, 0.15);
+        border-color: rgba(230, 200, 141, 0.5);
+      }
+      
+      .mc-hero-grid,
+      .gg-hero-grid {
+        grid-template-columns: 1fr;
+        gap: 25px;
+      }
+      
+      /* Reorder: Slider first, then mobile nav, then content on mobile/tablet */
+      .mc-preview-card,
+      .gg-preview-card {
+        order: 0;
+      }
+      
+      .mc-hero-content,
+      .gg-hero-content {
+        text-align: center;
+        order: 2;
+      }
+      
+      .mc-hero-description {
+        margin: 0 auto 20px;
+        border-left: none;
+        border-bottom: 3px solid var(--mc-neon-gold);
+        padding-left: 0;
+        padding-bottom: 15px;
+      }
+      
+      .gg-hero-description {
+        margin: 0 auto 20px;
+        padding-left: 0;
+        text-align: center;
+      }
+      
+      .gg-hero-description::before {
+        display: none;
+      }
+      
+      .mc-cta-group,
+      .gg-cta-group {
+        justify-content: center;
+      }
+    }
+    
+    /* Desktop-specific styles */
+    @media (min-width: 969px) {
+      .gg-hero-content {
+        text-align: center;
+      }
+      
+      .gg-hero-title {
+        text-align: center;
+      }
+      
+      .gg-cta-group {
+        justify-content: center;
+      }
+      
+      .gg-contact-btn {
+        padding: 16px 32px;
+        font-size: 15px;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .mc-container,
+      .gg-container {
+        padding: 0 15px;
+      }
+      
+      .gg-header {
+        padding: 8px 0;
+      }
+      
+      .gg-header-content {
+        justify-content: center;
+      }
+      
+      .mc-hero,
+      .gg-hero {
+        padding: 20px 0 15px;
+        min-height: auto;
+      }
+      
+      .mc-hero-title {
+        font-size: 32px;
+        line-height: 1.2;
+      }
+      
+      .gg-hero-title {
+        font-size: 32px;
+        line-height: 1.2;
+      }
+      
+      .mc-hero-description {
+        font-size: 16px;
+        line-height: 1.8;
+      }
+      
+      .gg-hero-description {
+        font-size: 17px;
+        line-height: 1.9;
+      }
+      
+      .mc-btn,
+      .gg-btn {
+        padding: 14px 24px;
+        font-size: 15px;
+      }
+      
+      .mc-preview-header,
+      .gg-preview-header {
+        flex-direction: column;
+        gap: 12px;
+        padding: 15px 18px;
+      }
+      
+      .mc-preview-title h3,
+      .gg-preview-title h3 {
+        font-size: 20px;
+      }
+      
+      .mc-slider-container,
+      .gg-slider-container {
+        padding: 15px;
+      }
+      
+      .mc-badge-chips {
+        display: none;
+      }
+      
+      .gg-badge-balloons {
+        display: none;
+      }
+      
+      .mc-benefits,
+      .gg-benefits {
+        margin-top: 15px;
+        padding: 18px;
+      }
+      
+      .mc-benefits h3,
+      .gg-benefits h3 {
+        font-size: 18px;
+        margin-bottom: 15px;
+      }
+      
+      .mc-benefits p,
+      .gg-benefits p {
+        font-size: 15px;
+        line-height: 1.7;
+      }
+      
+      .mc-badge-text,
+      .gg-badge-text {
+        font-size: 12px;
+      }
+      
+      .mc-badge-live,
+      .gg-badge-ribbon {
+        font-size: 10px;
+        padding: 5px 12px;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .mc-hero-title {
+        font-size: 28px;
+        line-height: 1.2;
+      }
+      
+      .gg-hero-title {
+        font-size: 28px;
+        line-height: 1.2;
+      }
+      
+      .mc-cta-group,
+      .gg-cta-group {
+        flex-direction: column;
+        width: 100%;
+        gap: 12px;
+      }
+      
+      .mc-btn,
+      .gg-btn {
+        width: 100%;
+        padding: 14px 22px;
+        font-size: 15px;
+      }
+      
+      .mc-casino-badge,
+      .gg-gala-badge {
+        padding: 10px 16px;
+        gap: 8px;
+      }
+      
+      .mc-badge-text,
+      .gg-badge-text {
+        font-size: 11px;
+      }
+      
+      .mc-hero-description {
+        font-size: 15px;
+        line-height: 1.8;
+      }
+      
+      .gg-hero-description {
+        font-size: 16px;
+        line-height: 1.9;
+      }
+      
+      .mc-benefits,
+      .gg-benefits {
+        padding: 18px;
+      }
+      
+      .mc-benefits h3,
+      .gg-benefits h3 {
+        font-size: 17px;
+        margin-bottom: 12px;
+      }
+      
+      .mc-benefits p,
+      .gg-benefits p {
+        font-size: 14px;
+        line-height: 1.7;
+      }
+      
+      .mc-logo-text h1,
+      .gg-logo-text h1 {
+        font-size: 22px;
+      }
+      
+      .mc-logo-text p,
+      .gg-logo-text p {
+        font-size: 9px;
+      }
+      
+      .design-selector-fab {
+        bottom: 90px;
+        right: 10px;
+      }
+      
+      .design-btn {
+        width: 45px;
+        height: 45px;
+        font-size: 18px;
+      }
+    }
+
+/* ==========================================
+   GOGO-COMPACT OVERRIDE (luz.html, n1.html, zoe.html)
+   Popluz section styled when shown via nav.
+   ========================================== */
+body.gogo-compact .popluz-section.popluz-design-container.active {
+  display: block;
+  visibility: visible;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  opacity: 1;
+  pointer-events: auto;
+}
