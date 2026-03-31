@@ -1232,11 +1232,10 @@
         p3.classList.add('phase-enter');
 
         document.getElementById('resultConcurso').textContent = 'CONCURSO #' + concursoNum;
-        var sheetDrawnForHeader = getSheetDrawnNumbersForDisplay();
-        document.getElementById('drawnNumbersDisplay').innerHTML = renderBallsHTML(
-            sheetDrawnForHeader.length ? sheetDrawnForHeader : drawnNumbers,
-            null
-        );
+        var sheetDrawn = getSheetDrawnNumbersForDisplay();
+        // Same official draw used for header badges and NÚMEROS ESCOLHIDOS highlights (sheet column F).
+        var officialDrawn = sheetDrawn.length ? sheetDrawn : drawnNumbers;
+        document.getElementById('drawnNumbersDisplay').innerHTML = renderBallsHTML(officialDrawn, null);
 
         var container = document.getElementById('winnersContainer');
         container.innerHTML = '';
@@ -1255,13 +1254,16 @@
 
             var isJackpot = w.matches >= 5;
             if (isJackpot) card.classList.add('jackpot-winner');
-            var matchedNums = w.numbers.filter(function(n) { return drawnNumbers.indexOf(n) >= 0; });
+            var matchedNums = w.numbers.filter(function(n) { return officialDrawn.indexOf(n) >= 0; });
 
-            // Helper for bola highlight
+            // Chosen balls: non-hits stay muted; hits use same ball-color-* as official drawn row (officialDrawn).
             function renderUserBallsHTML(numbers, matched) {
                 return numbers.map(function(n) {
                     var isMatch = matched.indexOf(n) !== -1;
-                    return '<span class="number-badge" style="background:' + (isMatch ? '#f59e0b' : '#e5e7eb') + ';color:' + (isMatch ? '#fff' : '#a3a3a3') + ';font-weight:800;box-shadow:0 1px 4px ' + (isMatch ? '#f59e0b44' : 'none') + ';">' + String(n).padStart(2, '0') + '</span>';
+                    if (isMatch) {
+                        return '<span class="number-badge ' + getBallColorClass(n) + '">' + String(n).padStart(2, '0') + '</span>';
+                    }
+                    return '<span class="number-badge" style="background:#e5e7eb;color:#a3a3a3;font-weight:800;">' + String(n).padStart(2, '0') + '</span>';
                 }).join('');
             }
             function renderMatchedBallsHTML(numbers) {
