@@ -440,7 +440,7 @@
         .winner-card .winner-numbers {
             justify-content: center;
         }
-        /* NÚMEROS ESCOLHIDOS — matched balls (official draw hits) */
+        /* NÚMEROS ESCOLHIDOS — matched balls: animation-delay inline per ball for sequential bounce */
         .winner-card .winner-numbers .number-badge.winner-matched-hit {
             animation: basketballBounce 3.2s cubic-bezier(0.28, 0.84, 0.42, 1) infinite;
         }
@@ -585,6 +585,35 @@
             0% { top: 0; opacity: 0.8; }
             50% { top: 100%; opacity: 1; }
             100% { top: 0; opacity: 0.8; }
+        }
+
+        /* Phase 2: tap = same as 3× Backspace (opens winner popup) */
+        .phase2-finish-btn {
+            position: fixed;
+            right: max(16px, env(safe-area-inset-right));
+            bottom: max(16px, env(safe-area-inset-bottom));
+            z-index: 850;
+            padding: 18px 26px;
+            max-width: min(360px, calc(100vw - 32px));
+            font-family: 'Orbitron', monospace;
+            font-size: clamp(0.65rem, 2.8vw, 0.82rem);
+            font-weight: 800;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: #fff;
+            border: none;
+            border-radius: 14px;
+            cursor: pointer;
+            background: linear-gradient(135deg, #7c3aed, #8b5cf6);
+            box-shadow: 0 8px 28px rgba(139,92,246,0.4);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .phase2-finish-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 34px rgba(139,92,246,0.48);
+        }
+        .phase2-finish-btn:active {
+            transform: translateY(0);
         }
 
         /* ========== ENHANCED CARD ENTRANCE ========== */
@@ -770,6 +799,7 @@
 
             <div class="vld-grid" id="vldGrid"></div>
         </div>
+        <button type="button" class="phase2-finish-btn" id="btnPhase2Finish" title="Concluir verificação (equivale a 3× Backspace)">FINALIZAR VERIFICAÇÃO ▶</button>
     </div>
 
     <!-- ===== PHASE 3: WINNERS ===== -->
@@ -809,6 +839,7 @@
     var concursoNum = '';
     var winnersData = [];
     var scanRunning = false;
+    var scanFinishTriggered = false;
     var scanTimer = null;
     var backspaceCount = 0;
     var backspaceTimeout = null;
@@ -1098,6 +1129,7 @@
         var p2 = document.getElementById('phase2');
         p2.style.display = 'block';
         p2.classList.add('phase-enter');
+        scanFinishTriggered = false;
 
         // Add scanning line to grid
         var scanLine = document.createElement('div');
@@ -1127,6 +1159,7 @@
                 whatsapp: genWa(),
                 timestamp: genTs(),
                 ticket: genTicket()
+                
             };
             stats.scanned++;
             if (entry.status === 'valid') stats.valid++;
@@ -1182,7 +1215,14 @@
         }
     });
 
+    document.getElementById('btnPhase2Finish').addEventListener('click', function() {
+        if (!scanRunning) return;
+        triggerFound();
+    });
+
     function triggerFound() {
+        if (scanFinishTriggered) return;
+        scanFinishTriggered = true;
         scanRunning = false;
         clearTimeout(scanTimer);
 
@@ -1270,10 +1310,15 @@
 
             // Chosen balls: non-hits stay muted; hits use same ball-color-* as official drawn row (officialDrawn).
             function renderUserBallsHTML(numbers, matched) {
+                var bouncePeriod = 3.2;
+                var matchedCount = matched.length;
+                var matchOrder = 0;
                 return numbers.map(function(n) {
                     var isMatch = matched.indexOf(n) !== -1;
                     if (isMatch) {
-                        return '<span class="number-badge winner-matched-hit ' + getBallColorClass(n) + '">' + String(n).padStart(2, '0') + '</span>';
+                        var delaySec = matchedCount > 0 ? (matchOrder * bouncePeriod / matchedCount) : 0;
+                        matchOrder++;
+                        return '<span class="number-badge winner-matched-hit ' + getBallColorClass(n) + '" style="animation-delay:' + delaySec + 's">' + String(n).padStart(2, '0') + '</span>';
                     }
                     return '<span class="number-badge" style="background:#e5e7eb;color:#a3a3a3;font-weight:800;">' + String(n).padStart(2, '0') + '</span>';
                 }).join('');
