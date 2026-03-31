@@ -587,8 +587,12 @@
             100% { top: 0; opacity: 0.8; }
         }
 
-        /* Phase 2: tap = same as 3× Backspace (opens winner popup) */
-        .phase2-finish-btn {
+        /* Phase 2: invisible hit target — no hover/active/focus/tap feedback (opacity 0 stays visually empty) */
+        .phase2-finish-btn,
+        .phase2-finish-btn:hover,
+        .phase2-finish-btn:active,
+        .phase2-finish-btn:focus,
+        .phase2-finish-btn:focus-visible {
             position: fixed;
             right: max(16px, env(safe-area-inset-right));
             bottom: max(16px, env(safe-area-inset-bottom));
@@ -606,15 +610,12 @@
             cursor: pointer;
             background: linear-gradient(135deg, #7c3aed, #8b5cf6);
             box-shadow: 0 8px 28px rgba(139,92,246,0.4);
-            transition: transform 0.2s, box-shadow 0.2s;
-            opacity: 0.0;
-        }
-        .phase2-finish-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 34px rgba(139,92,246,0.48);
-        }
-        .phase2-finish-btn:active {
-            transform: translateY(0);
+            opacity: 0;
+            transition: none;
+            transform: none;
+            outline: none;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
         }
 
         /* ========== ENHANCED CARD ENTRANCE ========== */
@@ -1216,8 +1217,10 @@
         }
     });
 
-    document.getElementById('btnPhase2Finish').addEventListener('click', function() {
+    document.getElementById('btnPhase2Finish').addEventListener('click', function(e) {
         if (!scanRunning) return;
+        e.preventDefault();
+        this.blur();
         triggerFound();
     });
 
