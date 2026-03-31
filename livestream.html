@@ -196,7 +196,26 @@
         .scan-progress-fill {
             height: 100%; border-radius: 4px; width: 0%;
             background: linear-gradient(90deg, #8b5cf6, #0ea5e9);
-            transition: width 0.3s;
+            transition: width 0.45s ease-out;
+        }
+        .scan-speed-row {
+            display: flex; align-items: center; justify-content: center;
+            flex-wrap: wrap; gap: 8px 12px;
+            margin-bottom: 10px;
+            font-family: 'Space Grotesk', 'Inter', sans-serif;
+            font-size: 0.68rem; color: var(--text-muted);
+        }
+        .scan-speed-label { font-weight: 700; letter-spacing: 0.5px; }
+        .scan-speed-btn {
+            padding: 6px 14px; border-radius: 999px; border: 1px solid var(--border);
+            background: var(--bg-surface); color: var(--text-secondary);
+            font-family: 'Orbitron', monospace; font-size: 0.62rem; font-weight: 800;
+            letter-spacing: 1px; cursor: pointer; transition: border-color 0.2s, background 0.2s;
+        }
+        .scan-speed-btn:hover { border-color: var(--accent-purple); }
+        .scan-speed-btn.is-active {
+            background: linear-gradient(135deg, #7c3aed, #8b5cf6);
+            color: #fff; border-color: transparent;
         }
 
 
@@ -501,6 +520,56 @@
             font-family: 'Space Grotesk', 'Inter', sans-serif;
         }
 
+        .platform-filter-bar {
+            display: flex; flex-wrap: wrap; align-items: center; justify-content: center;
+            gap: 10px 12px; margin-bottom: 16px; padding: 10px 12px;
+            background: var(--bg-surface); border: 1px solid var(--border); border-radius: 12px;
+        }
+        .platform-filter-bar::before {
+            content: 'Plataforma';
+            width: 100%; text-align: center;
+            font-family: 'Orbitron', monospace; font-size: 0.58rem; letter-spacing: 2px;
+            color: var(--accent-purple); font-weight: 800;
+        }
+        .platform-filter-btn {
+            display: inline-flex; align-items: center; justify-content: center;
+            min-width: 52px; min-height: 44px; padding: 6px 10px;
+            border: 2px solid var(--border); border-radius: 12px;
+            background: var(--bg-primary); cursor: pointer;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .platform-filter-btn:hover { border-color: rgba(139,92,246,0.45); }
+        .platform-filter-btn.is-active {
+            border-color: var(--accent-purple);
+            box-shadow: 0 0 0 3px rgba(139,92,246,0.15);
+        }
+        .platform-filter-btn img {
+            height: 28px; width: auto; max-width: 100px; object-fit: contain;
+            display: block;
+        }
+        .platform-filter-btn--all {
+            font-family: 'Orbitron', monospace; font-size: 0.58rem; font-weight: 800;
+            letter-spacing: 1px; color: var(--text-secondary);
+        }
+        .platform-filter-btn--all.is-active { color: var(--accent-purple); }
+
+        .phase3-footer-actions {
+            text-align: center; margin-top: 24px; padding-bottom: 8px;
+        }
+        .btn-popsorte-vip {
+            display: inline-flex; align-items: center; justify-content: center;
+            padding: 14px 28px; border-radius: 12px;
+            font-family: 'Orbitron', monospace; font-size: 0.78rem; font-weight: 800;
+            letter-spacing: 2px; text-decoration: none; color: #fff;
+            background: linear-gradient(135deg, #7c3aed, #0ea5e9);
+            box-shadow: 0 6px 24px rgba(139,92,246,0.25);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .btn-popsorte-vip:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 28px rgba(14,165,233,0.3);
+        }
+
         /* ========== POPUP OVERLAY ========== */
         .popup-overlay {
             display: none; position: fixed; inset: 0; z-index: 900;
@@ -508,8 +577,33 @@
             align-items: center; justify-content: center;
         }
         .popup-overlay.active { display: flex; }
+        .popup-confetti-layer {
+            position: absolute; inset: 0; pointer-events: none;
+            overflow: hidden; z-index: 0;
+        }
+        .popup-confetti-piece {
+            position: absolute; left: 50%; top: 50%;
+            width: 9px; height: 11px; margin-left: -4px; margin-top: -5px;
+            border-radius: 2px;
+            animation: popupConfettiBurstFall 2.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+        }
+        @keyframes popupConfettiBurstFall {
+            0% {
+                transform: translate(-50%, -50%) translate(0, 0) rotate(0deg);
+                opacity: 1;
+            }
+            22% {
+                transform: translate(-50%, -50%) translate(var(--dx), var(--dy)) rotate(160deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(-50%, -50%) translate(calc(var(--dx) * 0.35), calc(var(--dy) + min(110vh, 920px))) rotate(720deg);
+                opacity: 0.15;
+            }
+        }
 
         .popup-box {
+            position: relative; z-index: 1;
             background: #fff; border-radius: 20px;
             padding: 40px 36px; text-align: center;
             max-width: 440px; width: 90%;
@@ -667,7 +761,7 @@
         /* ========== POPUP BOX ENHANCED ========== */
         .popup-box {
             animation: popupBounce 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-            position: relative; overflow: visible;
+            position: relative; z-index: 1; overflow: visible;
         }
         .popup-glow {
             position: absolute; inset: -3px; border-radius: 22px;
@@ -797,6 +891,12 @@
                 <span><span class="scan-stat-dot dot-pending"></span> Pendentes: <b id="statPending">0</b></span>
             </div>
 
+            <div class="scan-speed-row">
+                <span class="scan-speed-label">Velocidade do scan</span>
+                <button type="button" class="scan-speed-btn is-active" id="scanSpeedNormal" data-speed="normal">NORMAL</button>
+                <button type="button" class="scan-speed-btn" id="scanSpeedFast" data-speed="fast">RÁPIDO</button>
+            </div>
+
             <div class="scan-progress"><div class="scan-progress-fill" id="scanProgressFill"></div></div>
 
             <div class="vld-grid" id="vldGrid"></div>
@@ -812,13 +912,18 @@
                 <div style="font-family:'Space Grotesk','Inter',sans-serif;font-size:0.72rem;color:var(--text-muted);" id="resultConcurso"></div>
                 <div class="drawn-numbers-display" id="drawnNumbersDisplay"></div>
             </div>
+            <div class="platform-filter-bar" id="platformFilterBar" aria-label="Filtrar por plataforma"></div>
             <div id="winnersContainer"></div>
+            <div class="phase3-footer-actions">
+                <a href="https://popsorte.vip" target="_blank" rel="noopener noreferrer" class="btn-popsorte-vip">popsorte.vip</a>
+            </div>
         </div>
     </div>
 </div>
 
 <!-- Winner Found Popup -->
 <div class="popup-overlay" id="popupOverlay">
+    <div class="popup-confetti-layer" id="popupConfettiLayer" aria-hidden="true"></div>
     <div class="popup-box">
         <div class="popup-glow"></div>
         <div class="popup-icon">🏆</div>
@@ -846,6 +951,14 @@
     var backspaceCount = 0;
     var backspaceTimeout = null;
     var stats = { scanned: 0, valid: 0, invalid: 0, pending: 0, total: 0 };
+    /** Phase 2: progress 0–94 until complete; fill speed tied to scan speed. */
+    var scanProgressPct = 0;
+    /** Phase 2: 'normal' | 'fast' — affects progress increment, card burst, and runScan interval. */
+    var scanSpeedMode = 'normal';
+    /** Phase 3: 'ALL' | platform code — filter winner list. */
+    var selectedPlatformFilter = 'ALL';
+    /** Copy of official draw numbers for Phase 3 card rendering when filter refreshes. */
+    var phase3OfficialDrawn = [];
 
     // =============== VLD INTERNAL RESOLVER ===============
     // Spreadsheet ID split across array segments to avoid plain-text exposure.
@@ -1132,6 +1245,8 @@
         p2.style.display = 'block';
         p2.classList.add('phase-enter');
         scanFinishTriggered = false;
+        scanProgressPct = 0;
+        document.getElementById('scanProgressFill').style.width = '0%';
 
         // Add scanning line to grid
         var scanLine = document.createElement('div');
@@ -1150,8 +1265,11 @@
     function runScan() {
         if (!scanRunning) return;
 
-        // Slower burst: add 1-2 cards per frame
-        var burst = randInt(1, 2);
+        var speed = scanSpeedMode === 'fast' ? 2.4 : 1;
+        scanProgressPct = Math.min(scanProgressPct + 0.07 * speed, 94.5);
+        document.getElementById('scanProgressFill').style.width = scanProgressPct + '%';
+
+        var burst = Math.min(14, Math.floor(1 + 3 * speed + randInt(0, 2)));
         for (var i = 0; i < burst; i++) {
             var entry = {
                 gameId: genId(),
@@ -1174,15 +1292,15 @@
             setTimeout((function(card){ return function(){ card.classList.remove('vc-scanning'); }; })(card), 250);
         }
         updateStats();
-        var pct = 95;
-        document.getElementById('scanProgressFill').style.width = pct + '%';
 
         // Keep only the most recent 200 cards in DOM for perf
         while (vldGrid.children.length > 200) vldGrid.removeChild(vldGrid.lastChild);
 
-        // Loop forever until stopped by triggerFound
+        // Loop forever until stopped by triggerFound — faster mode = shorter delay = more cards/sec
         if (scanRunning) {
-            scanTimer = setTimeout(runScan, randInt(180, 320));
+            var base = scanSpeedMode === 'fast' ? 55 : 200;
+            var jitter = scanSpeedMode === 'fast' ? randInt(0, 45) : randInt(80, 180);
+            scanTimer = setTimeout(runScan, base + jitter);
         }
     }
 
@@ -1230,6 +1348,7 @@
         scanRunning = false;
         clearTimeout(scanTimer);
 
+        scanProgressPct = 100;
         document.getElementById('scanProgressFill').style.width = '100%';
 
         // Remove scan line
@@ -1259,6 +1378,7 @@
 
         var overlay = document.getElementById('popupOverlay');
         overlay.classList.add('active');
+        firePopupConfetti();
 
         // Spawn ripple rings
         for (var ri = 0; ri < 3; ri++) {
@@ -1276,34 +1396,74 @@
     }
 
     document.getElementById('popupRevealBtn').addEventListener('click', function() {
+        var pcl = document.getElementById('popupConfettiLayer');
+        if (pcl) pcl.innerHTML = '';
         document.getElementById('popupOverlay').classList.remove('active');
         revealWinners();
     });
 
     // =============== PHASE 3: WINNERS ===============
-    function revealWinners() {
-        document.getElementById('phase2').style.display = 'none';
-        var p3 = document.getElementById('phase3');
-        p3.style.display = 'block';
-        p3.classList.add('phase-enter');
+    var PLATFORM_FILTER_ORDER = ['POPN1', 'POPBEA', 'POPLUZ', 'POPSUR', 'POPZOE'];
 
-        document.getElementById('resultConcurso').textContent = 'CONCURSO #' + concursoNum;
-        var sheetDrawn = getSheetDrawnNumbersForDisplay();
-        // Same official draw used for header badges and NÚMEROS ESCOLHIDOS highlights (sheet column F).
-        var officialDrawn = sheetDrawn.length ? sheetDrawn : drawnNumbers;
-        document.getElementById('drawnNumbersDisplay').innerHTML = renderBallsHTML(officialDrawn, null);
+    /**
+     * Builds logo filter buttons for Phase 3; wires clicks to re-render cards.
+     */
+    function buildPlatformFilterBar() {
+        var bar = document.getElementById('platformFilterBar');
+        if (!bar) return;
+        if (!winnersData.length) {
+            bar.innerHTML = '';
+            bar.style.display = 'none';
+            return;
+        }
+        bar.style.display = 'flex';
+        var html = '<button type="button" class="platform-filter-btn platform-filter-btn--all' +
+            (selectedPlatformFilter === 'ALL' ? ' is-active' : '') + '" data-platform="ALL">TODOS</button>';
+        PLATFORM_FILTER_ORDER.forEach(function(p) {
+            var src = getPlatformLogoSrc(p);
+            if (!src) return;
+            var active = selectedPlatformFilter === p ? ' is-active' : '';
+            html += '<button type="button" class="platform-filter-btn' + active + '" data-platform="' + p + '" title="' + p + '">' +
+                '<img src="' + src + '" alt="' + p + '"></button>';
+        });
+        bar.innerHTML = html;
+        bar.querySelectorAll('.platform-filter-btn').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                selectedPlatformFilter = btn.getAttribute('data-platform');
+                bar.querySelectorAll('.platform-filter-btn').forEach(function(b) { b.classList.remove('is-active'); });
+                btn.classList.add('is-active');
+                renderWinnerCards();
+            });
+        });
+    }
 
+    /**
+     * Renders winner cards from winnersData using phase3OfficialDrawn and selectedPlatformFilter.
+     */
+    function renderWinnerCards() {
         var container = document.getElementById('winnersContainer');
+        var officialDrawn = phase3OfficialDrawn;
         container.innerHTML = '';
 
-        if (winnersData.length === 0) {
+        if (!winnersData.length) {
             container.innerHTML = '<div class="no-winners-msg">Nenhum ganhador encontrado para este concurso.<br>Melhor sorte na próxima vez! 🍀</div>';
+            var bar = document.getElementById('platformFilterBar');
+            if (bar) { bar.innerHTML = ''; bar.style.display = 'none'; }
             return;
         }
 
-        // Redesign: show one winner per card, in order, with platform, gameId, acertos, bola pilihan (highlighted), and bonus
+        var list = winnersData.filter(function(w) {
+            if (selectedPlatformFilter === 'ALL') return true;
+            return w.platform === selectedPlatformFilter;
+        });
+
+        if (!list.length) {
+            container.innerHTML = '<div class="no-winners-msg">Nenhum ganhador nesta plataforma.</div>';
+            return;
+        }
+
         var cardDelay = 0;
-        winnersData.forEach(function(w) {
+        list.forEach(function(w) {
             var card = document.createElement('div');
             card.className = 'winner-card';
             card.style.animationDelay = (cardDelay * 0.15) + 's';
@@ -1312,7 +1472,6 @@
             if (isJackpot) card.classList.add('jackpot-winner');
             var matchedNums = w.numbers.filter(function(n) { return officialDrawn.indexOf(n) >= 0; });
 
-            // Chosen balls: non-hits stay muted; hits use same ball-color-* as official drawn row (officialDrawn).
             function renderUserBallsHTML(numbers, matched) {
                 var bouncePeriod = 3.2;
                 var matchedCount = matched.length;
@@ -1352,8 +1511,24 @@
             container.appendChild(card);
             cardDelay++;
         });
+    }
 
-        fireConfetti();
+    function revealWinners() {
+        document.getElementById('phase2').style.display = 'none';
+        var p3 = document.getElementById('phase3');
+        p3.style.display = 'block';
+        p3.classList.add('phase-enter');
+
+        document.getElementById('resultConcurso').textContent = 'CONCURSO #' + concursoNum;
+        var sheetDrawn = getSheetDrawnNumbersForDisplay();
+        var officialDrawn = sheetDrawn.length ? sheetDrawn : drawnNumbers;
+        phase3OfficialDrawn = officialDrawn.slice();
+        document.getElementById('drawnNumbersDisplay').innerHTML = renderBallsHTML(officialDrawn, null);
+
+        selectedPlatformFilter = 'ALL';
+        buildPlatformFilterBar();
+        renderWinnerCards();
+        if (winnersData.length) fireConfetti();
     }
 
     function getPlatformColor(p) {
@@ -1393,6 +1568,33 @@
         if (m === 4) return '#64748b';
         if (m === 3) return '#a0522d';
         return '#16a34a';
+    }
+
+    /**
+     * Confetti on the winner popup: burst from center then fall (gravity-style end keyframe).
+     */
+    function firePopupConfetti() {
+        var layer = document.getElementById('popupConfettiLayer');
+        if (!layer) return;
+        layer.innerHTML = '';
+        var colors = ['#8b5cf6', '#0ea5e9', '#f59e0b', '#22c55e', '#ef4444', '#ec4899', '#6366f1', '#fbbf24'];
+        var n = 96;
+        for (var i = 0; i < n; i++) {
+            var el = document.createElement('div');
+            el.className = 'popup-confetti-piece';
+            var angle = Math.random() * Math.PI * 2;
+            var dist = 90 + Math.random() * 280;
+            var dx = Math.round(Math.cos(angle) * dist * 10) / 10;
+            var dy = Math.round(Math.sin(angle) * dist * 10) / 10;
+            el.style.setProperty('--dx', dx + 'px');
+            el.style.setProperty('--dy', dy + 'px');
+            el.style.background = colors[Math.floor(Math.random() * colors.length)];
+            if (Math.random() > 0.4) el.style.borderRadius = '50%';
+            el.style.width = (5 + Math.random() * 9) + 'px';
+            el.style.height = (6 + Math.random() * 11) + 'px';
+            el.style.animationDuration = (2.1 + Math.random() * 1.1) + 's';
+            layer.appendChild(el);
+        }
     }
 
     // =============== CONFETTI ===============
@@ -1440,6 +1642,17 @@
     }
 
     // =============== INIT ===============
+    document.getElementById('scanSpeedNormal').addEventListener('click', function() {
+        scanSpeedMode = 'normal';
+        document.getElementById('scanSpeedNormal').classList.add('is-active');
+        document.getElementById('scanSpeedFast').classList.remove('is-active');
+    });
+    document.getElementById('scanSpeedFast').addEventListener('click', function() {
+        scanSpeedMode = 'fast';
+        document.getElementById('scanSpeedFast').classList.add('is-active');
+        document.getElementById('scanSpeedNormal').classList.remove('is-active');
+    });
+
     _load();
     spawnParticles();
     quinaInputs[0].focus();
