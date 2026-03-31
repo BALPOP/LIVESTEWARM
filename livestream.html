@@ -440,6 +440,18 @@
         .winner-card .winner-numbers {
             justify-content: center;
         }
+        /* NÚMEROS ESCOLHIDOS — matched balls (official draw hits) */
+        .winner-card .winner-numbers .number-badge.winner-matched-hit {
+            animation: basketballBounce 3.2s cubic-bezier(0.28, 0.84, 0.42, 1) infinite;
+        }
+        @keyframes basketballBounce {
+            0%, 100% { transform: translateY(0); }
+            25% { transform: translateY(-14px); }
+            50% { transform: translateY(0); }
+            65% { transform: translateY(-6px); }
+            80% { transform: translateY(0); }
+            90% { transform: translateY(-2px); }
+        }
         .winner-card:hover {
             border-color: rgba(139,92,246,0.3);
             box-shadow: 0 4px 16px rgba(139,92,246,0.08);
@@ -1261,7 +1273,7 @@
                 return numbers.map(function(n) {
                     var isMatch = matched.indexOf(n) !== -1;
                     if (isMatch) {
-                        return '<span class="number-badge ' + getBallColorClass(n) + '">' + String(n).padStart(2, '0') + '</span>';
+                        return '<span class="number-badge winner-matched-hit ' + getBallColorClass(n) + '">' + String(n).padStart(2, '0') + '</span>';
                     }
                     return '<span class="number-badge" style="background:#e5e7eb;color:#a3a3a3;font-weight:800;">' + String(n).padStart(2, '0') + '</span>';
                 }).join('');
@@ -1279,7 +1291,7 @@
                     + '<span class="winner-match-text" style="color:' + getMatchColor(w.matches) + ';font-size:0.92em;font-weight:800;">' + w.matches + ' ACERTO' + (w.matches !== 1 ? 'S' : '') + '!</span>'
                 + '</div>'
                 + '<div class="winner-card-info">'
-                    + '<span class="winner-id" style="font-size:1.2em;color:var(--accent-purple);font-weight:700;">ID: ' + w.gameId + '</span>'
+                    + '<span class="winner-id" style="font-size:1.2em;color:var(--accent-purple);font-weight:800;">ID: ' + w.gameId + '</span>'
                 + '</div>'
                 + '<div class="winner-numbers-row">'
                     + '<div class="winner-numbers-block"><div style="font-size:0.72em;color:var(--text-muted);font-weight:700;margin-bottom:2px;">NÚMEROS ESCOLHIDOS</div>'
