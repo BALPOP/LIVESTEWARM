@@ -139,11 +139,13 @@
         }
         .btn-apurar {
             display: flex; align-items: center; justify-content: center;
-            gap: 10px; margin: 0 auto;
-            padding: 13px 36px; border-radius: 10px;
+            gap: 12px; margin: 0 auto;
+            min-width: min(100%, 420px);
+            min-height: 56px;
+            padding: 18px 48px; border-radius: 12px;
             background: linear-gradient(135deg, #7c3aed, #8b5cf6);
             color: white; font-family: 'Orbitron', monospace;
-            font-size: 0.85rem; font-weight: 800;
+            font-size: clamp(0.88rem, 2.8vw, 1.05rem); font-weight: 800;
             letter-spacing: 2px; border: none; cursor: pointer;
             transition: all 0.3s; text-transform: uppercase;
         }
@@ -1268,6 +1270,18 @@
         return [];
     }
 
+    /**
+     * CONCURSO from sheet (column I) — first loaded row with a value.
+     * @returns {string} Trimmed concurso text, or empty string if none.
+     */
+    function getSheetConcursoForDisplay() {
+        for (var i = 0; i < winnersData.length; i++) {
+            var c = winnersData[i].concurso;
+            if (c !== undefined && c !== null && String(c).trim() !== '') return String(c).trim();
+        }
+        return '';
+    }
+
     function randInt(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
     function randItem(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
     function pad2(n) { return String(n).padStart(2, '0'); }
@@ -1633,7 +1647,9 @@
         p3.style.display = 'block';
         p3.classList.add('phase-enter');
 
-        document.getElementById('resultConcurso').textContent = 'CONCURSO #' + concursoNum;
+        var sheetConcurso = getSheetConcursoForDisplay();
+        var displayConcurso = sheetConcurso || concursoNum;
+        document.getElementById('resultConcurso').textContent = 'CONCURSO #' + displayConcurso;
         var sheetDrawn = getSheetDrawnNumbersForDisplay();
         var officialDrawn = sheetDrawn.length ? sheetDrawn : drawnNumbers;
         phase3OfficialDrawn = officialDrawn.slice();
